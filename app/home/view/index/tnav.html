@@ -1,0 +1,21 @@
+<div style="position: fixed;bottom: 0;height: 80px;width:100%;">
+    <ul class="wizard-steps" style="margin-left: -95px">
+        {foreach name="res" item="vo" }
+            {if condition="count($res) eq 1"}
+                    <style>
+                        .wizard-steps li:before{
+                            border:0;
+                        }
+                    </style>
+                    <li data-target="#step1" class="active">
+                        <span class="step" style="border-radius: 10px;width: 100px;line-height: 40px;border: 2px solid #ced1d6">{$vo.name}</span>
+                    </li>
+                {else /}
+                    <li data-target="#step1" class="active" >
+                        <span class="step" style="border-radius: 10px;width: 100px;line-height: 40px;border: 2px solid #ced1d6">{$vo.name}</span>
+                    </li>
+            {/if}
+        {/foreach}
+    </ul>
+
+</div>

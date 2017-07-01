@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <meta name="MobileOptimized" content="320" />
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="author" content="johnye" />
+    <meta name="shenma-site-verification" content="f28da5e2e3fb6e2afd372a3eedfda998" />
+    <meta name="baidu-site-verification" content="eafwEzRbnz" />
+    <!-- 标题 -->
+    <title>{block name="title"}{/block}</title>
+    <!-- end 标题 -->
+    <meta name="description" content="燃气录入系统，由燃气安全检查员使用">
+    <meta name="keywords" content="燃气检查">
+    <!-- 公共样式js -->
+    <link rel="stylesheet" type="text/css" href="__MOBILE__/css/public.css" />
+    <link rel="stylesheet" type="text/css" href="__MOBILE__/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="__MOBILE__/css/ionicons.min.css" />
+    <script type="text/javascript" src="__MOBILE__/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="__MOBILE__/js/layer.js"></script>
+    <!-- 下拉框模糊匹配 -->
+    <script type="text/javascript" src="__MOBILE__/js/hz2py.js"></script>
+    <script type="text/javascript" src="__MOBILE__/js/filter.js"></script>
+    <!-- end 下拉框模糊匹配 -->
+    <!-- end 公共样式js -->
+    <!-- 当前页单独样式 -->
+    {block name="style"}{/block}
+    <!-- end 当前页单独样式 -->
+    
+</head>
+
+<body>
+    <!-- 遮罩 -->
+    <div class="mask"></div>
+    <!-- end 遮罩 -->
+    <div id="big-box">
+    <!-- 主体内容 -->
+    {block name="main"}{/block}
+    <!-- end 主体内容 -->
+    <!-- 底部 -->
+    {block name="bottom"}
+        {include file="common/bottom" /}
+    {/block}
+    </div>
+    <!-- 当前页单独js -->
+    {block name="js"}{/block}
+    <!-- end 当前页单独js -->
+</body>
+
+</html>
