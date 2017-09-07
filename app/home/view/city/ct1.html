@@ -1,0 +1,186 @@
+{extend name="common/base" /}
+{block  name="oNav"}
+<li >
+    <a href="#">
+        <i class="icon-dashboard"></i>
+        <span class="menu-text"> 首页 </span>
+    </a>
+</li>
+{foreach name="res" item="vo" }
+{switch name="vo.id"}
+{case value="1"}
+<li f_id="{$vo.id}">
+    <a href="#">
+        <i class="icon-edit"></i>
+        <span class="menu-text"> {$vo.name} </span>
+    </a>
+
+</li>
+{/case}
+{case value="2"}
+<li f_id="{$vo.id}">
+    <a href="#" >
+        <i class=" icon-check"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="3"}
+<li f_id="{$vo.id}">
+    <a href="#">
+        <i class=" icon-credit-card"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="4"}
+<li f_id="{$vo.id}" >
+    <a href="#">
+        <i class="icon-cogs"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="5"}
+<li f_id="{$vo.id}" class="active">
+    <a href="#" >
+        <i class="icon-desktop"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="6"}
+<li f_id="{$vo.id}">
+    <a href="{:url('home/Task/show')}" >
+        <i class="icon-book"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{default /}default
+{/switch}
+{/foreach}
+{/block}
+{block name="txbody"}
+<span id="tname" style="display: none">{$tname}</span>
+<div class="modal fade" id="addStreet1" tabindex="-1" role="dialog" aria-labelledby="myModalLabels1"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabels1">
+                    修改名称信息
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label no-padding-right" for="form-field-12"> 名称： </label>
+                    <div class="col-sm-9">
+                        <input type="text" id="form-field-12" placeholder="请输入名称" required name="cname" class="col-xs-10 col-sm-5">
+                        <input type="hidden">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-md-offset-3 col-md-9">
+
+                    <button class="btn btn-info" type="button" id="upC" style="display: none">
+
+                        <i class="icon-ok bigger-110"></i>
+
+                        确认修改
+
+                    </button>
+                    <button class="btn btn-info" type="button" id="addQ" style="display: none">
+
+                        <i class="icon-ok bigger-110"></i>
+
+                        确认新增
+
+                    </button>
+
+                    <buttonss class="btn btn-default" data-dismiss="modal">关闭</buttonss>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="col-sm-4 widget-container-span ui-sortable" id="ct1">
+    <div class="widget-header header-color-blue">
+        <h4>城市区域列表</h4>
+        <button style="border-style: none;float: right;background-color: #FFF;color: #307ecc;font-size: 15px;margin: 1%;"  data-toggle="modal" data-target="#addStreet1" id="addCt">
+            新增
+        </button>
+    </div>
+    <div class="widget-body" style="height: auto!important;">
+        <div class="widget-main padding-8">
+            <table  style="width: 100%;font-size: 13px;border-collapse:   separate;   border-spacing:  5px; " id="ctType">
+                {foreach name="ces" item="value" key="k"}
+                {if condition="$value.parent_id eq 0"}
+                <tr d_id="{$value.id}" >
+                    <td style="border: 1px solid #c3c3c3;padding: 8px 5px" colspan="3">
+                        <i down="true" class="icon-plus" style="color:#8c8c8c;cursor: pointer;font-size: 14px "></i>
+                        <span style="cursor: pointer;font-size:13px;font-weight: bold;color: gray;padding-right:40% ">
+                               {$value.name}
+                            </span>
+                        <div style="float: right">
+                            <a class="blue" href="#" title="编辑" data-toggle="modal" data-target="#addStreet1">
+                                <i class="icon-pencil bigger-130"></i>
+                            </a>
+                            &nbsp;
+                            <a class="green" href="#" title="新增"  data-toggle="modal" data-target="#addStreet1">
+                                <i class="icon-plus-sign" style="font-size: 16px"> </i>
+                            </a>
+                            &nbsp;
+                            <a class="red" href="#" title="删除">
+
+                                <i class="icon-trash bigger-130"></i>
+
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {else/}
+                <tr par="{$value.parent_id}"  d_id="{$value.id}" style="display: none;">
+                    <td><button style="border-style: none;background-color: #FFF;" ></button></td>
+                    <td style="border: 1px solid #c3c3c3;padding:8px 0;" colspan="2">
+                        &nbsp;
+                            <span style="cursor: pointer;color: gray;padding-right:40%">
+                                           {$value.name}
+                            </span>
+                        <div style="float: right;margin-right: 5px">
+
+                            <a class="blue" href="#" title="编辑" data-toggle="modal" data-target="#addStreet1">
+                                <i class="icon-pencil bigger-130"></i>
+                            </a>
+                            &nbsp;
+                            <a class="red" href="#" title="删除">
+                                <i class="icon-trash bigger-130"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {/if}
+
+                {/foreach}
+
+            </table>
+        </div>
+    </div>
+</div>
+<div class="col-sm-8 widget-container-span ui-sortable" id="ct2">
+    <div class="widget-header header-color-blue">
+        <h4>街道小区列表</h4>
+        <button style="border-style: none;float: right;background-color: #FFF;color: #307ecc;font-size: 15px;margin: 1%;display: none"  data-toggle="modal" data-target="#addStreet" id="jd">
+            新增
+        </button>
+    </div>
+    <div class="widget-body" style="height: auto!important;">
+        <div class="widget-main padding-8">
+        </div>
+    </div>
+</div>
+{/block}

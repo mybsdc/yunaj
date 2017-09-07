@@ -1,0 +1,455 @@
+{extend name="common/base" /}
+{block  name="oNav"}
+<li >
+    <a href="#">
+        <i class="icon-dashboard"></i>
+        <span class="menu-text"> 首页 </span>
+    </a>
+</li>
+{foreach name="res" item="vo" }
+{switch name="vo.id"}
+{case value="1"}
+<li f_id="{$vo.id}">
+    <a href="#">
+        <i class="icon-edit"></i>
+        <span class="menu-text"> {$vo.name} </span>
+    </a>
+
+</li>
+{/case}
+{case value="2"}
+<li f_id="{$vo.id}">
+    <a href="#" >
+        <i class=" icon-check"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="3"}
+<li f_id="{$vo.id}">
+    <a href="#">
+        <i class=" icon-credit-card"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="4"}
+<li f_id="{$vo.id}" class="active">
+    <a href="#">
+        <i class="icon-cogs"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="5"}
+<li f_id="{$vo.id}">
+    <a href="#" >
+        <i class="icon-desktop"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="6"}
+<li f_id="{$vo.id}">
+    <a href="{:url('home/Task/show')}" >
+        <i class="icon-book"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{default /}default
+{/switch}
+{/foreach}
+{/block}
+{block  name="txbody"}
+<span id="tname" style="display: none">{$tname}</span>
+<div class="modal fade" id="myModals2" tabindex="-1" role="dialog" aria-labelledby="myModalLabels2"
+     aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title" id="myModalLabels2">
+                        关联城市
+                    </h4>
+                </div>
+
+                <div class="modal-body" style="text-align: center">
+                            <label  for="form-field-gs"> 城市： &nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <select name="city" id="form-field-gs" style="width: 100px">
+                                    <option value=""></option>
+                                    {foreach name="ct" item="value" key="k"}
+                                    <option value="{$value.id}">{$value.name}</option>
+                                    {/foreach}
+                                </select>
+                    <input type="hidden">
+
+                    <p style="color: red;margin-top: 30px;margin-bottom: 0">* 注意：如果下拉选择中没有选择项，则已有的城市已被选择完，请新增城市后再操作！！</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-offset-3 col-md-9">
+
+                        <button class="btn btn-info" type="button" id="addCz">
+
+                            <i class="icon-ok bigger-110"></i>
+
+                            确认
+                        </button>
+
+                        <buttonss class="btn btn-default" data-dismiss="modal">关闭</buttonss>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+</div>
+<div class="modal fade" id="myModals1" tabindex="-1" role="dialog" aria-labelledby="myModalLabels1"
+     aria-hidden="true">
+    <form class="form-horizontal" role="form" action="" method="post" autocomplete="off" id="addCom" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title" id="myModalLabels1">
+                    新增公司
+                </h4>
+            </div>
+
+            <div class="modal-body">
+
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-g1"> 公司名称： </label>
+                            <div class="col-sm-9">
+                                <input type="text" id="form-field-g1" placeholder="请输入公司名称" required name="gsName" class="col-xs-10 col-sm-5">
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right"> 公司类型：</label>
+                            <div class="col-sm-9">
+                                <label>
+                                    <input name="gl" type="radio"  class="ace" value="1">
+                                    <span class="lbl"> 区域公司</span>
+                                </label>
+                                <label>
+                                    <input name="gl"  type="radio"  class="ace" value="2">
+                                    <span class="lbl"> 单公司</span>
+                                </label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="parent_id" value="0">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-md-offset-3 col-md-9">
+
+                    <button class="btn btn-info" type="submit" >
+
+                        <i class="icon-ok bigger-110"></i>
+
+                        确认新增
+                    </button>
+
+                    <buttonss class="btn btn-default" data-dismiss="modal">关闭</buttonss>
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+    </form>
+</div>
+<div class="col-sm-6 widget-container-span ui-sortable" id="bmList">
+
+    <div class="widget-box">
+
+        <div class="widget-header header-color-blue">
+            <h4>公司列表</h4>
+            <button style="border-style: none;float: right;background-color: #FFF;color: #307ecc;font-size: 15px;margin: 1%;display: none" id="addOne" data-toggle="modal" data-target="#myModals1">
+                新增公司
+            </button>
+        </div>
+
+
+        <div class="widget-body" style="height: auto!important;">
+            <div class="widget-main padding-8">
+
+                <ul  style="width: 100%;font-size: 13px;padding: 0 ;margin: 0;line-height: 200%" id="bmType">
+                    {foreach name="re" item="value" key="k"}
+                    {if condition="(($value.type eq 0) OR ($value.type eq 1) OR ($value.type eq 2)) AND $value.parent_id eq 0"}
+                            <li d_id="{$value.id}" tp="{$value.type}" style="border: 1px solid #c3c3c3;margin-top: 5px">
+                                    &nbsp;
+                                    <i down="true" class="icon-plus" style="color:#8c8c8c;cursor: pointer;font-size: 14px "></i>
+                                    <span style="cursor: pointer;font-size:13px;font-weight: bold;color: gray;padding-right:20% ">
+                                        {$value.name}
+                                    </span>
+                                    <div style="float: right;margin-right: 5px">
+                                        <a class="orange" href="#" data-toggle="modal" data-target="#myModals2" title="城市关联">
+                                            <i class="icon-globe bigger-130"></i>
+                                        </a>
+                                        &nbsp;
+                                        <a class="blue" href="#" title="编辑">
+                                            <i class="icon-pencil bigger-130"></i>
+                                        </a>
+                                        &nbsp;
+                                        <a class="green" href="#" title="新增部门">
+                                            <i class="icon-plus-sign" style="font-size: 16px"> </i>
+                                        </a>
+                                        &nbsp;
+                                        <a class="red" href="#" title="删除">
+
+                                            <i class="icon-trash bigger-130"></i>
+
+                                        </a>
+                                    </div>
+                                <ul></ul>
+                            </li>
+                    {elseif condition="($value.type eq 1)  AND $value.parent_id neq 0" /}
+                    <!--<tr d_id="{$value.id}" par="{$value.parent_id}" tp="{$value.type}" style="display: none">-->
+                        <!--<td><button style="border-style: none;background-color: #FFF;" ></button></td>-->
+                        <!--<td style="border: 1px solid #c3c3c3;padding: 8px 5px" colspan="4">-->
+                            <!--<i down="true" class="icon-plus" style="color:#8c8c8c;cursor: pointer;font-size: 14px "></i>-->
+                            <!--<span style="cursor: pointer;font-size:13px;font-weight: bold;color: gray;padding-right:20% ">-->
+                               <!--{$value.name}-->
+                            <!--</span>-->
+                            <!--<div style="float: right">-->
+                                <!--<a class="orange" href="#" data-toggle="modal" data-target="#myModals2" title="城市关联">-->
+                                    <!--<i class="icon-globe bigger-130"></i>-->
+                                <!--</a>-->
+                                <!--&nbsp;-->
+                                <!--<a class="blue" href="#" title="编辑">-->
+                                    <!--<i class="icon-pencil bigger-130"></i>-->
+                                <!--</a>-->
+                                <!--&nbsp;-->
+                                <!--<a class="green" href="#" title="新增部门">-->
+                                    <!--<i class="icon-plus-sign" style="font-size: 16px"> </i>-->
+                                <!--</a>-->
+                                <!--&nbsp;-->
+                                <!--<a class="red" href="#" title="删除">-->
+
+                                    <!--<i class="icon-trash bigger-130"></i>-->
+
+                                <!--</a>-->
+                            <!--</div>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <li d_id="{$value.id}" par="{$value.parent_id}" tp="{$value.type}" style="border-top: 1px solid #c3c3c3;padding: 0;margin-top: 0;display: none;border-right: 0">
+                        &nbsp;
+                        <i down="true" class="icon-plus" style="color:#8c8c8c;cursor: pointer;font-size: 14px "></i>
+                        <span style="cursor: pointer;font-size:13px;font-weight: bold;color: gray;padding-right:20% ">
+                                        {$value.name}
+                                    </span>
+                        <div style="float: right;margin-right: 5px">
+                            <a class="orange" href="#" data-toggle="modal" data-target="#myModals2" title="城市关联">
+                                <i class="icon-globe bigger-130"></i>
+                            </a>
+                            &nbsp;
+                            <a class="blue" href="#" title="编辑">
+                                <i class="icon-pencil bigger-130"></i>
+                            </a>
+                            &nbsp;
+                            <a class="green" href="#" title="新增部门">
+                                <i class="icon-plus-sign" style="font-size: 16px"> </i>
+                            </a>
+                            &nbsp;
+                            <a class="red" href="#" title="删除">
+                                <i class="icon-trash bigger-130"></i>
+                            </a>
+                        </div>
+                        <ul></ul>
+                    </li>
+                    {elseif condition="($value.type eq 2)  AND $value.parent_id neq 0" /}
+                    <!--<tr d_id="{$value.id}" par="{$value.parent_id}" tp="{$value.type}" style="display: none">-->
+                        <!--<td><button style="border-style: none;background-color: #FFF;" ></button></td>-->
+                        <!--<td><button style="border-style: none;background-color: #FFF;" ></button></td>-->
+                        <!--<td style="border: 1px solid #c3c3c3;padding: 8px 5px" colspan="3">-->
+                            <!--<i down="true" class="icon-plus" style="color:#8c8c8c;cursor: pointer;font-size: 14px "></i>-->
+                            <!--<span style="cursor: pointer;font-size:13px;font-weight: bold;color: gray;padding-right:20% ">-->
+                               <!--{$value.name}-->
+                            <!--</span>-->
+                            <!--<div style="float: right">-->
+                                <!--<a class="orange" href="#" data-toggle="modal" data-target="#myModals2" title="城市关联">-->
+                                    <!--<i class="icon-globe bigger-130"></i>-->
+                                <!--</a>-->
+                                <!--&nbsp;-->
+                                <!--<a class="blue" href="#" title="编辑">-->
+                                    <!--<i class="icon-pencil bigger-130"></i>-->
+                                <!--</a>-->
+                                <!--&nbsp;-->
+                                <!--<a class="green" href="#" title="新增部门">-->
+                                    <!--<i class="icon-plus-sign" style="font-size: 16px"> </i>-->
+                                <!--</a>-->
+                                <!--&nbsp;-->
+                                <!--<a class="red" href="#" title="删除">-->
+
+                                    <!--<i class="icon-trash bigger-130"></i>-->
+
+                                <!--</a>-->
+                            <!--</div>-->
+                        <!--</td>-->
+                    <!--</tr>-->
+                    <li d_id="{$value.id}" par="{$value.parent_id}" tp="{$value.type}" style="border-top: 1px solid #c3c3c3;padding: 0;margin-top: 0;display: none;border-right: 0">
+                        &nbsp;
+                        <i down="true" class="icon-plus" style="color:#8c8c8c;cursor: pointer;font-size: 14px "></i>
+                        <span style="cursor: pointer;font-size:13px;font-weight: bold;color: gray;padding-right:20% ">
+                                        {$value.name}
+                                    </span>
+                        <div style="float: right;margin-right: 5px">
+                            <a class="orange" href="#" data-toggle="modal" data-target="#myModals2" title="城市关联">
+                                <i class="icon-globe bigger-130"></i>
+                            </a>
+                            &nbsp;
+                            <a class="blue" href="#" title="编辑">
+                                <i class="icon-pencil bigger-130"></i>
+                            </a>
+                            &nbsp;
+                            <a class="green" href="#" title="新增部门">
+                                <i class="icon-plus-sign" style="font-size: 16px"> </i>
+                            </a>
+                            &nbsp;
+                            <a class="red" href="#" title="删除">
+                                <i class="icon-trash bigger-130"></i>
+                            </a>
+                        </div>
+                        <ul></ul>
+                    </li>
+                    {elseif condition="$value.type eq 3" /}
+                            <!--<tr par="{$value.parent_id}" tp="{$value.type}" d_id="{$value.id}" style="display: none;">-->
+                                <!--<td><button style="border-style: none;background-color: #FFF;" ></button></td>-->
+                                <!--<td style="border: 1px solid #c3c3c3;padding:8px 0;" colspan="2">-->
+                                    <!--<i down="true" class="icon-plus" style="color:#8c8c8c;cursor: pointer;font-size: 14px;margin-left: 5px "></i>-->
+                                    <!--<span style="cursor: pointer;color: gray;padding-right:40%">-->
+                                           <!--{$value.name}-->
+                                       <!--</span>-->
+                                    <!--<div style="float: right;margin-right: 5px">-->
+
+                                        <!--<a class="blue" href="#" title="编辑">-->
+                                            <!--<i class="icon-pencil bigger-130"></i>-->
+                                        <!--</a>-->
+                                        <!--&nbsp;-->
+                                        <!--<a class="red" href="#" title="删除">-->
+                                            <!--<i class="icon-trash bigger-130"></i>-->
+                                        <!--</a>-->
+                                    <!--</div>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                    <li par="{$value.parent_id}" tp="{$value.type}" d_id="{$value.id}" style="border-top: 1px solid #c3c3c3;padding: 0;margin-top: 0;display: none;border-right: 0">
+                        &nbsp;
+                        <i down="true" class="icon-plus" style="color:#8c8c8c;cursor: pointer;font-size: 14px "></i>
+                        <span style="cursor: pointer;font-size:13px;font-weight: bold;color: gray;padding-right:20% ">
+                                        {$value.name}
+                                    </span>
+                        <div style="float: right;margin-right: 5px">
+                            <a class="blue" href="#" title="编辑">
+                                <i class="icon-pencil bigger-130"></i>
+                            </a>
+                            &nbsp;
+                            <a class="red" href="#" title="删除">
+                                <i class="icon-trash bigger-130"></i>
+                            </a>
+                        </div>
+                        <ul></ul>
+                    </li>
+                        {/if}
+
+                    {/foreach}
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="col-sm-6 widget-container-span ui-sortable" id="div2" style="display: none">
+
+    <div class="widget-box">
+
+        <div class="widget-header header-color-blue">
+            <h4>用户列表</h4>
+        </div>
+        <div class="widget-body">
+            <div class="widget-main padding-8">
+                <div style="width: 100%" id="addDtm" >
+                    <form class="form-horizontal" role="form" action="" method="post" autocomplete="off" id="addBm" style="display: none">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 名称： </label>
+                                <div class="col-sm-9">
+                                    <input type="text" id="form-field-1" placeholder="请输入名称" required name="bmName" class="col-xs-10 col-sm-5">
+                                </div>
+                            </div>
+                            <div class="space-4"></div>
+                            <div class="space-4"></div>
+                            <button class="btn btn-info" type="button" id="updateDpt" style="display: none;margin-left: 70%">
+
+                                <i class="icon-ok bigger-110"></i>
+
+                                修改信息
+
+                            </button>
+                            <hr style="border:1px solid rgba(155, 195, 210, 0.54);display: none">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right"> 权限：</label>
+                                <div class="col-sm-9">
+                                    <label>
+                                        <input name="jc" type="checkbox"  class="ace" value="2">
+                                        <span class="lbl"> 检查</span>
+                                    </label>
+                                    <label>
+                                        <input name="sh" type="checkbox"  class="ace" value="3">
+                                        <span class="lbl"> 审核</span>
+                                    </label>
+                                    <label>
+                                        <input name="gl" type="checkbox"  class="ace" value="4">
+                                        <span class="lbl"> 基础数据管理</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="hidden" name="parent_id" value="0">
+                            <button class="btn btn-info" type="button" id="updateRole" style="display: none;margin-left: 70%">
+
+                                <i class="icon-ok bigger-110"></i>
+
+                                修改权限
+
+                            </button>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-md-offset-3 col-md-9">
+
+                                <button class="btn btn-info" type="submit">
+
+                                    <i class="icon-ok bigger-110"></i>
+
+                                    确认添加
+
+                                </button>
+
+                                <button class="btn btn-default" id="closeDiv" type="button">关闭</button>
+                            </div>
+
+
+                        </div>
+                    </form>
+                </div>
+                <div style="width: 100%" id="getTab">
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{/block}
+

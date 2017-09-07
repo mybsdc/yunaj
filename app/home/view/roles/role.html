@@ -1,0 +1,88 @@
+{extend name="common/base" /}
+{block  name="oNav"}
+<li >
+    <a href="#">
+        <i class="icon-dashboard"></i>
+        <span class="menu-text"> 首页 </span>
+    </a>
+</li>
+{foreach name="res" item="vo" }
+{switch name="vo.id"}
+{case value="1"}
+<li f_id="{$vo.id}">
+    <a href="#">
+        <i class="icon-edit"></i>
+        <span class="menu-text"> {$vo.name} </span>
+    </a>
+
+</li>
+{/case}
+{case value="2"}
+<li f_id="{$vo.id}">
+    <a href="#" >
+        <i class=" icon-check"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="3"}
+<li f_id="{$vo.id}">
+    <a href="#">
+        <i class=" icon-credit-card"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="4"}
+<li f_id="{$vo.id}" class="active">
+    <a href="#">
+        <i class="icon-cogs"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="5"}
+<li f_id="{$vo.id}" >
+    <a href="#" >
+        <i class="icon-desktop"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="6"}
+<li f_id="{$vo.id}">
+    <a href="{:url('home/Task/show')}" >
+        <i class="icon-book"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{default /}default
+{/switch}
+{/foreach}
+{/block}
+{block name="txbody"}
+<span id="tname" style="display: none">{$tname}</span>
+<div class="table-header" >
+    角色模块
+</div>
+<div style="width: 100%;padding: 10px 0" id="role">
+    {foreach name="ro" item="value"  key="k"}
+    {if condition="$value.name neq '系统管理员' "}
+        <button rid="{$value.id}" style="float: left;margin-left: 1%;border-style: none;width: 100px;padding: 5px 0">{$value.name}</button>
+    {/if}
+    {/foreach}
+</div>
+<div class="table-header" style="float: left;width: 100%;margin-top: 10px">
+    功能模块
+</div>
+<div style="width: 100%;padding: 10px 0" id="fun">
+    {foreach name="r" item="value"  key="k"}
+    <label style="margin-left: 1%;display: block">
+        <input type="checkbox" class="ace" fid="{$value.id}">
+        <span class="lbl">&nbsp;&nbsp;&nbsp;{$value.name}</span>
+    </label>
+    {/foreach}
+    <button style="border-style: none ;float: right;padding: 5px 10px;background-color: rgb(111, 179, 224);color: #FFF;display: none">修改</button>
+</div>
+{/block}

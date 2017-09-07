@@ -1,0 +1,623 @@
+{extend name="common/base" /}
+{block  name="oNav"}
+<li class="">
+	<a href="#">
+		<i class="icon-dashboard"></i>
+		<span class="menu-text"> 首页 </span>
+	</a>
+</li>
+    {foreach name="res" item="vo" }
+        {switch name="vo.id"}
+            {case value="1"}
+                <li f_id="{$vo.id}" class="active">
+                    <a href="javascript:;">
+                        <i class="icon-edit"></i>
+                        <span class="menu-text"> {$vo.name} </span>
+                    </a>
+
+                </li>
+            {/case}
+            {case value="2"}
+                <li f_id="{$vo.id}">
+                    <a href="javascript:;">
+                        <i class=" icon-check"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {case value="3"}
+                <li f_id="{$vo.id}">
+                    <a href="javascript:;">
+                        <i class=" icon-credit-card"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {case value="4"}
+            <li f_id="{$vo.id}">
+                <a href="javascript:;">
+                    <i class="icon-cogs"></i>
+                    <span class="menu-text">  {$vo.name} </span>
+                </a>
+            </li>
+            {/case}
+            {case value="5"}
+                <li f_id="{$vo.id}">
+                    <a href="#" >
+                        <i class="icon-desktop"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {case value="6"}
+                <li f_id="{$vo.id}">
+                    <a href="{:url('home/Task/show')}" >
+                        <i class="icon-book"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {default /}default
+        {/switch}
+    {/foreach}
+{/block}
+{block name="txbody"}
+<!-- layer -->
+
+<link rel="stylesheet" type="text/css" href="__PC__/layui/css/layui.css" />
+<script type="text/javascript" src="__PC__/layui/lay/dest/layui.all.js"></script>
+<!-- <script type="text/javascript" src="__PC__/layui/layui.js"></script> -->
+<!-- <script type="text/javascript">
+    layui.config({
+        base: '__PC__/layui/lay/modules/' // 模块目录
+    }).use('laypage'); // 加载入口
+</script> -->
+<!-- 引入图标库 -->
+<link rel="stylesheet" type="text/css" href="__MOBILE__/css/ionicons.min.css" />
+<!-- end 引入图标库 -->
+<style type="text/css">
+/*#layui-laypage-0 {
+	float: right;
+	width: auto;
+}*/
+.row {
+	margin: 0;
+}
+.layui-laypage-curr, .layui-laypage-em {
+	background-color: #6faed9!important;
+}
+</style>
+<!-- end layer -->
+<span id="tname" style="display: none;">{:input('get.tname')}</span>
+<div class="table-header" id="userHe">
+	<label>
+    	<select id="task">
+    		<option value="">全部</option>
+    		{volist name="taskList" id="vo"}
+    		<option value="{$vo.id}">{$vo.name}</option>
+    		{/volist}
+    	</select>
+    	<span>待检查列表</span>
+    </label>
+</div>
+<div class="row" style="background-color: #f0f3f8; padding: 16px 0; height: 55px;">
+    <div class="col-sm-8">
+	    <label>
+	    	<span>城市</span>
+	    	<select id="city">
+	    	<!-- <option value="">请选择</option> -->
+	    	{volist name="getLocation['city']" id="vo"}
+	    		<option value="{$vo.id}">{$vo.name}</option>
+	    	{/volist}
+	    	</select>
+	    </label>
+	    <label>
+	    	<span>区域</span>
+	    	<select id="area">
+	    	<option value="">请选择</option>
+	    	{volist name="getLocation['area']" id="vo"}
+	    		<option value="{$vo.id}">{$vo.name}</option>
+	    	{/volist}
+	    	</select>
+	    </label>
+	    <label>
+	    	<span>小区/街道</span>
+	    	<select id="xq">
+	    	<option value="">请选择</option>
+	    	{volist name="getLocation['xq']" id="vo"}
+	    		<option value="{$vo.id}">{$vo.name}</option>
+	    	{/volist}
+	    	</select>
+	    </label>
+    </div>
+    <!-- <script type="text/javascript" src="__MOBILE__/js/jquery-1.8.3.min.js"></script> -->
+    <script type="text/javascript">
+    
+    	// 选城市
+    	$('#city').change(function(){
+    		var city_id = $(this).val();
+    		var html = '<option value="">请选择</option>';
+    		$.post("{:url('home/do_check/index')}", {city_id: city_id}, function(data){
+    			var dataObj = JSON.parse(data); // string to obj
+		    	$(dataObj.area).each(function(i){
+				    html += '<option value="' + this.id + '">' + this.name + '</option>';
+				});
+				$('#area').html(html);
+				$('#pageNum').html(dataObj.pageNum); // 共几页
+				$('#isCount').html(dataObj.count); // 共几条
+				if (dataObj.count === 0) { // 判断是否无数据，无数据则显示一句话
+					showNull(0);
+					return false;
+				}
+			    layui.laypage({
+			        cont: 'layer-pages',
+			        groups: 5, // 显示页码数
+			        skin: '#0f90e7',
+			        pages: dataObj.pageNum, // 总页数
+			        first: '首页',
+					last: '尾页',
+			        jump: function(obj, first){
+
+			            // 得到了当前页，用于向服务端请求对应数据
+			            var curr = obj.curr;
+			            $('#isCurrPage').html(curr);
+		            	postData = {page: curr, city_id: city_id};
+				        $.post("{:url('home/do_check/toPage')}", postData, function(data){
+			                let dataObj = eval(data); // json转对象
+			                /*if (dataObj.length == 0) { // 数据对象为空
+			                    $('#isCurrPage').html(0);
+			                    $('#pageNum').html(0);
+			                } else {
+			                    $('#isCurrPage').html(curr);
+			                }*/
+			                var html = '';
+			                $(dataObj).each(function(i){
+			                	html += '<tr>';
+							        html += '<td class="center">' + (i + 1 + {:config('row')} * (curr - 1)) + '</td>';
+					                html += '<td>' + this.areaName + this.xqName + '</td>';
+					                html += '<td>' + this.dong + this.unit + '单元' + this.room + '</td>';
+					                html += '<td style="text-align: right;">' + this.cstcode + '</td>';
+					                html += '<td style="text-align: center;">' + this.cstname + '</td>';
+					                html += '<td class="hidden-480" style="text-align: right;">' + this.telphone + '</td>';
+					                html += '<td class="hidden-480">' + this.typeName + '</td>';
+					                html += '<td class="hidden-480">' + this.brandName + '</td>';
+					                html += '<td class="hidden-480">' + this.direction + '</td>';
+					                html += '<td class="hidden-480 center"><a href="{:url('home/do_check/addLog')}?cstcode=' + this.cstcode + '" title="新增检查记录"><i class="icon-plus-sign" style="color: #87b87f; font-size: 18px; cursor: pointer"></i></a></td>';
+					            html += '</tr>';
+			                });
+			                html += '<tr style="background-color: #f5f5f5;">';
+			                html += '<td></td>';
+			                html += '<td colspan="10">';
+				            html += '<button class="icon-cloud-download" style="background-color: #17a3ff;color: #FFF;border-style: none ;padding: 5px 10px;float: right;margin-left: 1%;cursor: pointer" id="toExcel" id="toExcel">导出数据</button>';
+				            html += '</td>';
+				            html += '</tr>';
+			                $('#listData').html(html);
+			            }, 'json'); // 必须指定json，否则前台无法识别
+			        }
+			    });
+		   }, 'json');
+    	});
+
+    	// 选区域
+    	$('#area').change(function(){
+    		var area_id = $(this).val();
+    		var html = '<option value="">请选择</option>';
+    		$.post("{:url('home/do_check/index')}", {area_id: area_id}, function(data){
+    			// let dataObj = eval(data); // json转对象
+    			var dataObj = JSON.parse(data);
+		    	$(dataObj.xq).each(function(i){
+				    html += '<option value="' + this.id + '">' + this.name + '</option>';
+				});
+				$('#xq').html(html);
+
+				$('#pageNum').html(dataObj.pageNum); // 共几页
+				$('#isCount').html(dataObj.count); // 共几条
+				if (dataObj.count === 0) { // 判断是否无数据，无数据则显示一句话
+					showNull(0);
+					return false;
+				}
+			    layui.laypage({
+			        cont: 'layer-pages',
+			        groups: 5, // 显示页码数
+			        skin: '#0f90e7',
+			        pages: dataObj.pageNum, // 总页数
+			        first: '首页',
+					last: '尾页',
+			        jump: function(obj, first){
+
+			            // 得到了当前页，用于向服务端请求对应数据
+			            var curr = obj.curr;
+			            $('#isCurrPage').html(curr);
+		            	postData = {page: curr, area_id: area_id};
+				        $.post("{:url('home/do_check/toPage')}", postData, function(data){
+			                let dataObj = eval(data); // json转对象
+			                /*if (dataObj.length == 0) { // 数据对象为空
+			                    $('#isCurrPage').html(0);
+			                    $('#pageNum').html(0);
+			                    return false;
+			                } else {
+			                    $('#isCurrPage').html(curr);
+			                }*/
+			                var html = '';
+			                $(dataObj).each(function(i){
+			                	html += '<tr>';
+							        html += '<td class="center">' + (i + 1 + {:config('row')} * (curr - 1)) + '</td>';
+					                html += '<td>' + this.areaName + this.xqName + '</td>';
+					                html += '<td>' + this.dong + this.unit + '单元' + this.room + '</td>';
+					                html += '<td style="text-align: right;">' + this.cstcode + '</td>';
+					                html += '<td style="text-align: center;">' + this.cstname + '</td>';
+					                html += '<td class="hidden-480" style="text-align: right;">' + this.telphone + '</td>';
+					                html += '<td class="hidden-480">' + this.typeName + '</td>';
+					                html += '<td class="hidden-480">' + this.brandName + '</td>';
+					                html += '<td class="hidden-480">' + this.direction + '</td>';
+					                html += '<td class="hidden-480 center"><a href="{:url('home/do_check/addLog')}?cstcode=' + this.cstcode + '" title="新增检查记录"><i class="icon-plus-sign" style="color: #87b87f; font-size: 18px; cursor: pointer"></i></a></td>';
+					            html += '</tr>';
+			                });
+			                html += '<tr style="background-color: #f5f5f5;">';
+			                html += '<td></td>';
+			                html += '<td colspan="10">';
+				            html += '<button class="icon-cloud-download" style="background-color: #17a3ff;color: #FFF;border-style: none ;padding: 5px 10px;float: right;margin-left: 1%;cursor: pointer" id="toExcel">导出数据</button>';
+				            html += '</td>';
+				            html += '</tr>';
+			                $('#listData').html(html);
+			            }, 'json'); // 必须指定json，否则前台无法识别
+			        }
+			    });
+		   }, 'json');
+    	});
+
+    	// 选小区
+    	$('#xq').change(function(){
+    		var xq_id = $(this).val();
+    		var html = '';
+    		$.post("{:url('home/do_check/index')}", {xq_id: xq_id}, function(data){
+    			// let dataObj = eval(data); // json转对象
+    			var dataObj = JSON.parse(data);
+				$('#pageNum').html(dataObj.pageNum); // 共几页
+				$('#isCount').html(dataObj.count); // 共几条
+				if (dataObj.count === 0) { // 判断是否无数据，无数据则显示一句话
+					showNull(0);
+					return false;
+				}
+			    layui.laypage({
+			        cont: 'layer-pages',
+			        groups: 5, // 显示页码数
+			        skin: '#0f90e7',
+			        pages: dataObj.pageNum, // 总页数
+			        first: '首页',
+					last: '尾页',
+			        jump: function(obj, first){
+
+			            // 得到了当前页，用于向服务端请求对应数据
+			            var curr = obj.curr;
+			            $('#isCurrPage').html(curr);
+		            	postData = {page: curr, xq_id: xq_id};
+				        $.post("{:url('home/do_check/toPage')}", postData, function(data){
+			                let dataObj = eval(data); // json转对象
+			                /*if (dataObj.length == 0) { // 数据对象为空
+			                    $('#isCurrPage').html(0);
+			                    $('#pageNum').html(0);
+			                } else {
+			                    $('#isCurrPage').html(curr);
+			                }*/
+			                var html = '';
+			                $(dataObj).each(function(i){
+			                	html += '<tr>';
+							        html += '<td class="center">' + (i + 1 + {:config('row')} * (curr - 1)) + '</td>';
+					                html += '<td>' + this.areaName + this.xqName + '</td>';
+					                html += '<td>' + this.dong + this.unit + '单元' + this.room + '</td>';
+					                html += '<td style="text-align: right;">' + this.cstcode + '</td>';
+					                html += '<td style="text-align: center;">' + this.cstname + '</td>';
+					                html += '<td class="hidden-480" style="text-align: right;">' + this.telphone + '</td>';
+					                html += '<td class="hidden-480">' + this.typeName + '</td>';
+					                html += '<td class="hidden-480">' + this.brandName + '</td>';
+					                html += '<td class="hidden-480">' + this.direction + '</td>';
+					                html += '<td class="hidden-480 center"><a href="{:url('home/do_check/addLog')}?cstcode=' + this.cstcode + '" title="新增检查记录"><i class="icon-plus-sign" style="color: #87b87f; font-size: 18px; cursor: pointer"></i></a></td>';
+					            html += '</tr>';
+			                });
+			                html += '<tr style="background-color: #f5f5f5;">';
+			                html += '<td></td>';
+			                html += '<td colspan="10">';
+				            html += '<button class="icon-cloud-download" style="background-color: #17a3ff;color: #FFF;border-style: none ;padding: 5px 10px;float: right;margin-left: 1%;cursor: pointer" id="toExcel">导出数据</button>';
+				            html += '</td>';
+				            html += '</tr>';
+			                $('#listData').html(html);
+			            }, 'json'); // 必须指定json，否则前台无法识别
+
+			        }
+			    });
+		   }, 'json');
+    	});
+
+    	// 选任务
+    	$('#task').change(function(){
+    		var task_id = $(this).val();
+    		var html = '';
+    		$.post("{:url('home/do_check/index')}", {task_id: task_id}, function(data){
+    			var dataObj = JSON.parse(data);
+				$('#pageNum').html(dataObj.pageNum); // 共几页
+				$('#isCount').html(dataObj.count); // 共几条
+				if (dataObj.count === 0) { // 判断是否无数据，无数据则显示一句话
+					showNull(0);
+					return false;
+				}
+			    layui.laypage({
+			        cont: 'layer-pages',
+			        groups: 5, // 显示页码数
+			        skin: '#0f90e7',
+			        pages: dataObj.pageNum, // 总页数
+			        first: '首页',
+					last: '尾页',
+			        jump: function(obj, first){
+
+			            // 得到了当前页，用于向服务端请求对应数据
+			            var curr = obj.curr;
+			            $('#isCurrPage').html(curr);
+		            	postData = {page: curr, task_id: task_id};
+				        $.post("{:url('home/do_check/toPage')}", postData, function(data){
+				        	// console.log(data);
+			                var dataObj = JSON.parse(data); // json转对象
+			                /*if (dataObj.length == 0) { // 数据对象为空
+			                    $('#isCurrPage').html(0);
+			                    $('#pageNum').html(0);
+			                } else {
+			                    $('#isCurrPage').html(curr);
+			                }*/
+			                var html = '';
+			                $(dataObj).each(function(i){
+			                	html += '<tr>';
+							        html += '<td class="center">' + (i + 1 + {:config('row')} * (curr - 1)) + '</td>';
+					                html += '<td>' + this.areaName + this.xqName + '</td>';
+					                html += '<td>' + this.dong + this.unit + '单元' + this.room + '</td>';
+					                html += '<td style="text-align: right;">' + this.cstcode + '</td>';
+					                html += '<td style="text-align: center;">' + this.cstname + '</td>';
+					                html += '<td class="hidden-480" style="text-align: right;">' + this.telphone + '</td>';
+					                html += '<td class="hidden-480">' + this.typeName + '</td>';
+					                html += '<td class="hidden-480">' + this.brandName + '</td>';
+					                html += '<td class="hidden-480">' + this.direction + '</td>';
+					                html += '<td class="hidden-480 center"><a href="{:url('home/do_check/addLog')}?cstcode=' + this.cstcode + '" title="新增检查记录"><i class="icon-plus-sign" style="color: #87b87f; font-size: 18px; cursor: pointer"></i></a></td>';
+					            html += '</tr>';
+			                });
+			                html += '<tr style="background-color: #f5f5f5;">';
+			                html += '<td></td>';
+			                html += '<td colspan="10">';
+				            html += '<button class="icon-cloud-download" style="background-color: #17a3ff;color: #FFF;border-style: none ;padding: 5px 10px;float: right;margin-left: 1%;cursor: pointer" id="toExcel">导出数据</button>';
+				            html += '</td>';
+				            html += '</tr>';
+			                $('#listData').html(html);
+			            }, 'json'); // 必须指定json，否则前台无法识别
+
+			        }
+			    });
+		   }, 'json');
+    	});
+    </script>
+    <div class="col-sm-4">
+	    <div class="nav-search" id="nav-search" style="top: -3px;">
+	        <span class="input-icon">
+	            <input type="text" id="toSearch" placeholder="按房号或卡号搜索" class="nav-search-input" autocomplete="off" value="" />
+	            <i class="icon-search nav-search-icon" style="cursor: pointer" id="likeUser"></i>
+	        </span>
+	    </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('#toSearch').bind('input propertychange', function() { // 监听搜索框
+        var num = $('#toSearch').val();
+        var html = '';
+        $.get("{:url('home/do_check/index')}", {num: num}, function(data){
+        	var dataObj = JSON.parse(data);
+			$('#pageNum').html(dataObj.pageNum); // 共几页
+			$('#isCount').html(dataObj.count); // 共几条
+			if (dataObj.count === 0) { // 判断是否无数据，无数据则显示一句话
+				showNull(0);
+				return false;
+			}
+		    layui.laypage({
+		        cont: 'layer-pages',
+		        groups: 5, // 显示页码数
+		        skin: '#0f90e7',
+		        pages: dataObj.pageNum, // 总页数
+		        first: '首页',
+				last: '尾页',
+		        jump: function(obj, first){
+
+		            // 得到了当前页，用于向服务端请求对应数据
+		            var curr = obj.curr;
+		            $('#isCurrPage').html(curr);
+	            	postData = {page: curr, num: num};
+			        $.post("{:url('home/do_check/toPage')}", postData, function(data){
+			        	console.log(curr);
+		                let dataObj = eval(data); // json转对象
+		                /*if (dataObj.length == 0) { // 数据对象为空
+		                    $('#isCurrPage').html(0);
+		                    $('#pageNum').html(0);
+		                } else {
+		                    $('#isCurrPage').html(curr);
+		                }*/
+		                var html = '';
+		                $(dataObj).each(function(i){
+		                	html += '<tr>';
+							    html += '<td class="center">' + (i + 1 + {:config('row')} * (curr - 1)) + '</td>';
+				                html += '<td>' + this.areaName + this.xqName + '</td>';
+				                html += '<td>' + this.dong + this.unit + '单元' + this.room + '</td>';
+				                html += '<td style="text-align: right;">' + this.cstcode + '</td>';
+				                html += '<td style="text-align: center;">' + this.cstname + '</td>';
+				                html += '<td class="hidden-480" style="text-align: right;">' + this.telphone + '</td>';
+				                html += '<td class="hidden-480">' + this.typeName + '</td>';
+				                html += '<td class="hidden-480">' + this.brandName + '</td>';
+				                html += '<td class="hidden-480">' + this.direction + '</td>';
+				                html += '<td class="hidden-480 center"><a href="{:url('home/do_check/addLog')}?cstcode=' + this.cstcode + '" title="新增检查记录"><i class="icon-plus-sign" style="color: #87b87f; font-size: 18px; cursor: pointer"></i></a></td>';
+				            html += '</tr>';
+		                });
+		                html += '<tr style="background-color: #f5f5f5;">';
+		                html += '<td></td>';
+		                html += '<td colspan="10">';
+			            html += '<button class="icon-cloud-download" style="background-color: #17a3ff;color: #FFF;border-style: none ;padding: 5px 10px;float: right;margin-left: 1%;cursor: pointer" id="toExcel">导出数据</button>';
+			            html += '</td>';
+			            html += '</tr>';
+		                $('#listData').html(html);
+		            }, 'json'); // 必须指定json，否则前台无法识别
+
+		        }
+		    });
+        }, 'json');               
+    });
+</script>
+
+<div class="table-responsive">
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th style="text-align: left;">地址</th>
+                <th style="text-align: left;">房号</th>
+                <th style="text-align: right;">用户编号</th>
+                <th style="text-align: center;">姓名</th>
+                <th style="text-align: right;">联系电话</th>
+                <th style="text-align: left;">气表类型</th>
+                <th style="text-align: left;">品牌</th>
+                <th style="text-align: left;">进气方向</th>
+                <th class="center">操作</th>
+            </tr>
+        </thead>
+        <tbody style="text-align: left;" id="listData">
+        {volist name="listData" id="vo"}
+            <tr class="{$i}">
+                <td class="center">
+                	{$i}
+                </td>
+                <td>{$vo.areaName}{$vo.xqName}</td>
+                <td>{$vo.dong}{$vo.unit}单元{$vo.room}</td>
+                <td style="text-align: right;">{$vo.cstcode}</td>
+                <td style="text-align: center;" class="getName">{$vo.cstname}</td>
+                <td class="hidden-480 getTel" style="text-align: right;">{$vo.telphone}</td>
+                <td class="hidden-480">
+                	{$vo.typeName}
+                </td>
+                <td class="hidden-480">
+                	{$vo.brandName}
+                </td>
+                <td class="hidden-480">
+                	{$vo.direction}
+                </td>
+                <td class="hidden-480 center">
+	                <a href="{:url('home/do_check/addLog')}?cstcode={$vo.cstcode}" title="新增检查记录"><i class="icon-plus-sign" style="color: #87b87f; font-size: 18px; cursor: pointer"></i></a>
+                </td>
+            </tr>
+        {/volist}
+            <tr style="background-color: #f5f5f5;">
+                <td></td>
+                <td colspan="10">
+                    <button class="icon-cloud-download" style="background-color: #17a3ff;color: #FFF;border-style: none ;padding: 5px 10px;float: right;margin-left: 1%;cursor: pointer" id="toExcel">
+                        导出数据
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <script type="text/javascript">
+		$(document).delegate('#toExcel', 'click', function(){ // 导出excel
+			var num = $('#toSearch').val(); // 模糊搜索数据结果
+			var toCityId = $('#city').val();
+			var toAreaId = $('#area').val();
+			var toXqId = $('#xq').val();
+			var toTask = $('#task').val(); // 任务id
+			/*$.get("{:url('home/do_check/toExcel')}", {toCityId: toCityId, toAreaId: toAreaId, toXqId: toXqId}, function (data){
+					console.log(data)
+			}, 'json');*/
+			$.ajax({
+	            type: 'get',
+	            url: "{:url('home/do_check/toExcel')}?toCityId=" + toCityId + "&toAreaId=" + toAreaId + "&toXqId=" + toXqId + "&num=" + num + "&toTask=" + toTask,
+	            beforeSend: function() {
+	                ajaxbg.show();
+	            },
+	            success: function(data){
+	                window.location.href="{:url('home/do_check/toExcel')}?toCityId=" + toCityId + "&toAreaId=" + toAreaId + "&toXqId=" + toXqId + "&num=" + num + "&toTask=" + toTask;
+	            },
+	            complete: function() {
+	                ajaxbg.hide();
+	            }
+	        });
+			// window.location.href="{:url('home/do_check/toExcel')}?toCityId=" + toCityId + "&toAreaId=" + toAreaId + "&toXqId=" + toXqId + "&num=" + num + "&toTask=" + toTask;
+		});
+	</script>
+    <div class="row" style="background-color: #f0f3f8; line-height: 70px; height: 70px;">
+        <div class="col-sm-4">
+            <div class="dataTables_info" id="sample-table-2_info">
+                第&nbsp;<span id="isCurrPage">{eq name="count" value="0"}0{else/}1{/eq}</span>&nbsp;/&nbsp;<span id="pageNum">{$pageNum}</span>&nbsp;页，共&nbsp;<span id="isCount">{$count}</span>&nbsp;条
+            </div>
+        </div>
+        <script type="text/javascript">
+        function showNull(count){ // 若没有数据
+        	if (count == 0) {
+        		$('#listData').html('<tr><td colspan="11" class="showNull">暂时没有数据哦</td></tr>');
+        		$('#isCurrPage').html(0);
+			    $('#pageNum').html(0);
+			    $('#layer-pages').html(''); // 没有数据要分页条何用？
+        	}
+        }
+        showNull({$count});
+        </script>
+        <div class="col-sm-8">
+            <div class="dataTables_paginate paging_bootstrap">
+                <!-- layer 分页 -->
+				<div id="layer-pages"></div>
+				<script type="text/javascript">
+					pageNum = {$pageNum}; // 全局变量
+				    layui.laypage({
+				        cont: 'layer-pages',
+				        groups: 5, // 显示页码数
+				        skin: '#0f90e7',
+				        pages: pageNum, // 总页数
+				        first: '首页',
+				        last: '尾页',
+				        jump: function(obj, first){
+
+				            // 得到了当前页，用于向服务端请求对应数据
+				            var curr = obj.curr;
+				            if(!first){
+				            	$('#isCurrPage').html(curr);
+				            	postData = {page: curr};
+						        $.post("{:url('home/do_check/toPage')}", postData, function(data){
+					                let dataObj = eval(data); // json转对象
+					                if (dataObj.length == 0) { // 数据对象为空
+					                    $('#isCurrPage').html(0);
+					                    $('#pageNum').html(0);
+					                } else {
+					                    $('#isCurrPage').html(curr);
+					                }
+					                var html = '';
+					                $(dataObj).each(function(i){
+					                	html += '<tr>';
+							                html += '<td class="center">' + (i + 1 + {:config('row')} * (curr - 1)) + '</td>';
+							                html += '<td>' + this.areaName + this.xqName + '</td>';
+							                html += '<td>' + this.dong + this.unit + '单元' + this.room + '</td>';
+							                html += '<td style="text-align: right;">' + this.cstcode + '</td>';
+							                html += '<td style="text-align: center;">' + this.cstname + '</td>';
+							                html += '<td class="hidden-480" style="text-align: right;">' + this.telphone + '</td>';
+							                html += '<td class="hidden-480">' + this.typeName + '</td>';
+							                html += '<td class="hidden-480">' + this.brandName + '</td>';
+							                html += '<td class="hidden-480">' + this.direction + '</td>';
+							                html += '<td class="hidden-480 center"><a href="{:url('home/do_check/addLog')}?cstcode=' + this.cstcode + '" title="新增检查记录"><i class="icon-plus-sign" style="color: #87b87f; font-size: 18px; cursor: pointer"></i></a></td>';
+							            html += '</tr>';
+					                });
+					                html += '<tr style="background-color: #f5f5f5;">';
+					                html += '<td></td>';
+					                html += '<td colspan="10">';
+						            html += '<button class="icon-cloud-download" style="background-color: #17a3ff;color: #FFF;border-style: none ;padding: 5px 10px;float: right;margin-left: 1%;cursor: pointer" id="toExcel">导出数据</button>';
+						            html += '</td>';
+						            html += '</tr>';
+					                $('#listData').html(html);
+					            }, 'json'); // 必须指定json，否则前台无法识别
+						    }
+				        }
+				    });
+				</script>
+				<!-- end layer 分页 -->
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}

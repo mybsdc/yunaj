@@ -1,0 +1,289 @@
+{extend name="common/base" /}
+{block  name="oNav"}
+<li >
+    <a href="#">
+        <i class="icon-dashboard"></i>
+        <span class="menu-text"> 首页 </span>
+    </a>
+</li>
+{foreach name="res" item="vo" }
+{switch name="vo.id"}
+{case value="1"}
+<li f_id="{$vo.id}">
+    <a href="#">
+        <i class="icon-edit"></i>
+        <span class="menu-text"> {$vo.name} </span>
+    </a>
+
+</li>
+{/case}
+{case value="2"}
+<li f_id="{$vo.id}">
+    <a href="#" >
+        <i class=" icon-check"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="3"}
+<li f_id="{$vo.id}">
+    <a href="#">
+        <i class=" icon-credit-card"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="4"}
+<li f_id="{$vo.id}" >
+    <a href="#">
+        <i class="icon-cogs"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="5"}
+<li f_id="{$vo.id}" class="active">
+    <a href="#" >
+        <i class="icon-desktop"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="6"}
+<li f_id="{$vo.id}">
+    <a href="{:url('home/Task/show')}" >
+        <i class="icon-book"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{default /}default
+{/switch}
+{/foreach}
+{/block}
+
+{block name="txbody"}
+<span id="tname" style="display: none">{$tname}</span>
+<div style="width: 100%">
+    <div class="table-header" style="margin-bottom: 0">
+        新增明细
+    </div>
+    <div style="width: 100%;border: 1px solid #307ecc;padding: 10px 0;float: left">
+        <form action="" id="addCd">
+            <label style="float: left;margin-left: 2%;width: 20%;min-width: 200px">选择参数：
+                <select name="ywcs" style="width: 100px" required style="width: 10%;min-width: 100px">
+                    {foreach name="re" item="value" key="k"}
+                    <option value="{$value.id}">{$value.name}</option>
+                    {/foreach}
+                </select>
+            </label>
+            <label style="float: left;margin-left: 2%;width: 20%;min-width: 240px;display: none" id="wt"><span>问题：</span>
+                <input type="text" name="question" required placeholder="请输入问题" style="width: 70%;min-width: 163px">
+            </label>
+            <label style="float: left;margin-left: 2%;width: 40%;min-width: 400px;display: none" id="xz">选择项：
+                <input type="text" name="d1" required placeholder="请输入正面状态" style="width: 35%;min-width: 163px">&nbsp;&nbsp;
+                <input type="text" name="d2"  required placeholder="请输入负面状态" style="width: 35%;min-width: 163px">
+            </label>
+            <button type="submit" style="float: right;margin-right: 1%;border-style: none;background-color: #87b87f;color: #FFF;padding: 4px 10px">立即新增</button>
+        </form>
+    </div>
+
+</div>
+<div class="modal fade" id="myModals1" tabindex="-1" role="dialog" aria-labelledby="myModalLabels1"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h4 class="modal-title" id="myModalLabels1">
+                    修改明细
+                </h4>
+            </div>
+            <form class="form-horizontal" role="form" action="" method="post" autocomplete="off" id="updateSu">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> <span id="tx1"></span> </label>
+                        <div class="col-sm-9">
+                            <input type="text" id="form-field-1" placeholder="请输入用户名" required name="sname" class="col-xs-10 col-sm-5">
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 选择项： </label>
+                        <div class="col-sm-9">
+                            <input type="text" id="form-field-2" placeholder="请输入正面状态" name="d1" required class="col-xs-10 col-sm-5" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="form-field-4"></label>
+                        <div class="col-sm-9">
+                            <input type="text" id="form-field-4" placeholder="请输入负面状态" name="d2" required class="col-xs-10 col-sm-5" >
+                        </div>
+                    </div>
+                    <input type="hidden" name="sid" required>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-md-offset-3 col-md-9">
+
+                        <button class="btn btn-info" type="submit">
+
+                            <i class="icon-ok bigger-110"></i>
+
+                            提交
+
+                        </button>
+
+                        <buttonss class="btn btn-default" data-dismiss="modal">关闭</buttonss>
+                    </div>
+
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<div id="suPage">
+    <div class="table-header" style="margin-top: 10px;float: left;width: 100%">
+        业务参数明细表
+    </div>
+    <div class="table-responsive">
+        <table id="sample-table-s1" class="table table-striped table-bordered table-hover"  style="margin-bottom: 0">
+            <thead>
+
+            <tr>
+                <th class="center" style="width: 10%">
+                    序号
+                </th>
+                <th id="th1" style="width: 60%">问题</th>
+                <th style="width: 20%">选择项</th>
+                <th class="hidden-480" style="width: 10%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {if condition="count($ses) eq 0 "}
+            <tr>
+                <td colspan="4">暂时没有用户数据...</td>
+            </tr>
+            {else/}
+            {foreach name="ses" item="value" key="k"}
+            <?php
+            $arr=explode("|",$value['name']);
+        ?>
+            <tr id="{$value.id}" pid="{$value.ywcs_id}">
+                <td class="center">{$start*$num+$k+1}</td>
+                <td class="center">{$arr[0]}</td>
+                <td class="center">
+                    {if condition="count($arr) eq 1"}
+                    该项没有选择项
+                    {else/}
+                    {$arr[1]}/{$arr[2]}
+                    {/if}
+                </td>
+                <td class="center">
+                    <a href="#" class="icon-edit" style="background-color: #6eb9ff;color: #FFF;border-style: none;font-size: 18px;padding: 5px"
+                       data-toggle="modal" data-target="#myModals1">
+                    </a>
+                    <button class="icon-trash" style="background-color: #ff7a62;color: #FFF;border-style: none;font-size: 18px;padding: 5px">
+                    </button>
+                </td>
+            </tr>
+            {/foreach}
+            {/if}
+
+        </table>
+        <div  style="padding-top:10px ;background-color: #f0f3f8;width: 100%;height: 50px">
+            <div class="col-sm-4">
+                <div class="dataTables_info" id="sample-table-2_info">
+                    当前
+                    {if condition="$pageCount eq 0 "}
+                    0
+                    {else/}
+                    {$page}
+                    {/if}
+                    /
+                    {if condition="$pageCount eq '' "}
+                    0
+                    {else/}
+                    <span id="pageCount">{$pageCount}</span>
+                    {/if}
+                    页，共
+                    {if condition="$count eq '' "}
+                    0
+                    {else/}
+                    {$count}
+                    {/if}
+                    条
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="dataTables_paginate paging_bootstrap">
+                    <ul class="pagination" id="userPageS2" >
+                        {if condition="$pageCount gt 1 "}
+                        {if condition="$page gt 1 "}
+                        <li><a href="#" style="color: black">上一页</a></li>
+                        {if condition="$pageCount gt 5 "}
+                            <li><a href="#" style="color: black">首页</a></li>
+                        {/if}
+                        {/if}
+                        {assign name="a" value="0" /}
+                        {assign name="b" value="0" /}
+                        {assign name="c" value="0" /}
+                        {for start="1" end="$pageCount+1" name='i'}
+                        {if condition="$i eq $page "}
+                        <li><a href="#" style="background-color: rgb(111, 179, 224);color: #FFF">{$i}</a></li>
+                        {else/}
+                        {if condition="$pageCount gt  5"}
+                        {if condition="$page elt 3 "}
+                        {if condition="$i gt 5"}
+                        <li><a href="#" style="color: black">...</a></li>
+                        {php}break;{/php}
+                        {else}
+                        <li><a href="#" style="color: black">{$i}</a></li>
+                        {/if}
+                        {elseif condition="($page gt 3) AND ($page lt ($pageCount-2))"/}
+                        {if condition="($i egt ($page-2)) AND ($i elt ($page+2))"}
+                        <li><a href="#" style="color: black">{$i}</a></li>
+                        {elseif condition="$i lt $page-2"/}
+                        {if condition="$a eq 0"}
+                        <li><a href="#" style="color: black">...</a></li>
+                        <i style="display: none">{$a++}</i>
+                        {/if}
+                        {elseif condition="$i gt $page+2"/}
+                        {if condition="$b eq 0"}
+                        <li><a href="#" style="color: black">...</a></li>
+                        <i style="display: none">{$b++}</i>
+                        {/if}
+                        {/if}
+                        {elseif condition="$page egt ($pageCount-2)"/}
+                        {if condition="($i egt $pageCount-4)"}
+                        <li><a href="#" style="color: black">{$i}</a></li>
+                        {else/}
+                        {if condition="$c eq 0"}
+                        <li><a href="#" style="color: black">...</a></li>
+                        <i style="display: none">{$c++}</i>
+                        {/if}
+                        {/if}
+                        {/if}
+                        {else/}
+                        <li><a href="#" style="color: black">{$i}</a></li>
+                        {/if}
+                        {/if}
+
+                        {/for}
+                        {if condition="$page lt $pageCount "}
+                        {if condition="$pageCount gt 5 "}
+                        <li><a href="#" style="color: black">尾页</a></li>
+                        {/if}
+                        <li><a href="#" style="color: black">下一页</a></li>
+                        {/if}
+                        {/if}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{/block}

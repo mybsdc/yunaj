@@ -1,0 +1,385 @@
+{extend name="common/base" /}
+{block  name="oNav"}
+<li >
+    <a href="#">
+        <i class="icon-dashboard"></i>
+        <span class="menu-text"> 首页 </span>
+    </a>
+</li>
+{foreach name="res" item="vo" }
+{switch name="vo.id"}
+{case value="1"}
+<li f_id="{$vo.id}">
+    <a href="#">
+        <i class="icon-edit"></i>
+        <span class="menu-text"> {$vo.name} </span>
+    </a>
+
+</li>
+{/case}
+{case value="2"}
+<li f_id="{$vo.id}">
+    <a href="#" >
+        <i class=" icon-check"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="3"}
+<li f_id="{$vo.id}">
+    <a href="#">
+        <i class=" icon-credit-card"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="4"}
+<li f_id="{$vo.id}" class="active">
+    <a href="#">
+        <i class="icon-cogs"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="5"}
+<li f_id="{$vo.id}">
+    <a href="#" >
+        <i class="icon-desktop"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{case value="6"}
+<li f_id="{$vo.id}">
+    <a href="{:url('home/Task/show')}" >
+        <i class="icon-book"></i>
+        <span class="menu-text">  {$vo.name} </span>
+    </a>
+</li>
+{/case}
+{default /}default
+{/switch}
+{/foreach}
+{/block}
+{block  name="txbody"}
+<span id="tname" style="display: none">{$tname}</span>
+<div id="userPage">
+    <div class="table-header" id="userHe">
+
+        用户管理
+        <div class="nav-search" id="nav-search">
+
+                <span class="input-icon">
+
+                    <input type="text" id="users" placeholder="姓名、代码、电话" class="nav-search-input" id="nav-search-input"
+                           autocomplete="off">
+                    <i class="icon-search nav-search-icon" style="cursor: pointer" id="likeUser"></i>
+                </span>
+
+
+        </div>
+    </div>
+    <div class="modal fade" id="updateUser" tabindex="-1" role="dialog" aria-labelledby="myModalLabels"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabels">
+                        编辑用户资料
+                    </h4>
+                </div>
+                <form class="form-horizontal" role="form" action="" method="post" autocomplete="off" id="udUser">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-11"> 用户名： </label>
+                            <div class="col-sm-9">
+                                <input type="text" id="form-field-11" placeholder="请输入用户名" required name="username" class="col-xs-10 col-sm-5">
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-12"> 用户代码： </label>
+                            <div class="col-sm-9">
+                                <input type="text" id="form-field-12" placeholder="请输入姓的全拼+名的首字母" name="code" required class="col-xs-10 col-sm-5">
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-13"> 用户电话： </label>
+                            <div class="col-sm-9">
+                                <input type="number" id="form-field-13" placeholder="请输入用户电话" pattern="{11}" required name="phone" class="col-xs-10 col-sm-5" style="-webkit-appearance: none;">
+                                <span class="help-inline col-xs-12 col-sm-7">
+                                                        <span class="middle" style="color: red" id="sp3"></span>
+                                                    </span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="form-field-14"> 用户密码： </label>
+                            <div class="col-sm-9">
+                                <input type="text" id="form-field-14" placeholder="请输入密码"   name="pwd" class="col-xs-10 col-sm-5" style="-webkit-appearance: none;">
+                            </div>
+                        </div>
+                        <input type="hidden" name="u_id">
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-md-offset-3 col-md-9">
+
+                            <button class="btn btn-info" type="submit">
+
+                                <i class="icon-ok bigger-110"></i>
+
+                                确认修改
+
+                            </button>
+
+                            <buttonss class="btn btn-default" data-dismiss="modal">关闭</buttonss>
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <div class="table-responsive">
+
+        <table id="sample-table-1" class="table table-striped table-bordered table-hover"  style="margin-bottom: 0">
+
+            <thead>
+
+            <tr>
+                <th class="center">
+                    选择
+                </th>
+                <th>用户名称</th>
+                <th>用户代码</th>
+                <th>手机号码</th>
+                <th class="hidden-480">状态</th>
+                <th class="hidden-480">
+                    <i class="icon-time bigger-110 hidden-480"></i>
+                    录入时间
+                </th>
+                <th class="hidden-480">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {if condition="count($re) eq 0 "}
+            <tr>
+                <td colspan="7">暂时没有用户数据...</td>
+            </tr>
+            {else/}
+            {foreach name="re" item="value" key="k"}
+            <tr r_id="{$value.id}" >
+                <td class="center">
+                    <label>
+                        <input type="checkbox" class="ace">
+                        <span class="lbl"></span>
+                    </label>
+                </td>
+                <td>{$value.name}</td>
+                <td>{$value.code}</td>
+                <td >{$value.mobile}</td>
+                <td class="hidden-480" style="text-align: center">
+                    {if condition="$value.is_Enable eq 1 "}
+                    <button class="btn btn-xs btn-success" >启用</button>
+                    {else/}
+                    <button class="btn btn-xs ">未启用</button>
+                    {/if}
+                </td>
+                <td class="hidden-480" style="text-align: center"><?php echo date("Y-m-d H:i:s",$value['createdate']);?></td>
+                <td class="hidden-480">
+                    <a href="#" class="icon-edit" style="background-color: #6eb9ff;color: #FFF;border-style: none;font-size: 18px;padding: 5px"
+                       data-toggle="modal" data-target="#updateUser">
+                    </a>
+                    <!--<button class="icon-trash" style="background-color: #ff7a62;color: #FFF;border-style: none;font-size: 18px;padding: 5px">-->
+                    </button>
+                </td>
+            </tr>
+            {/foreach}
+            {/if}
+
+            <tr>
+                <td colspan="7">
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+
+                                    <h4 class="modal-title" id="myModalLabel">
+                                        新增用户
+                                    </h4>
+                                </div>
+                                <form class="form-horizontal" role="form" action="" method="post" autocomplete="off" id="addUser">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 用户名： </label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="form-field-1" placeholder="请输入用户名" required name="username" class="col-xs-10 col-sm-5">
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 密码： </label>
+                                            <div class="col-sm-9">
+                                                <input type="password" id="form-field-2" placeholder="请输入密码" name="password" required class="col-xs-10 col-sm-5" >
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-2"> 确认密码： </label>
+                                            <div class="col-sm-9">
+                                                <input type="password" id="form-field-3" placeholder="请再次输入密码" required class="col-xs-10 col-sm-5">
+                                                <span class="help-inline col-xs-12 col-sm-7">
+                                                        <span class="middle" style="color: red" id="sp1"></span>
+                                                    </span>
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 用户代码： </label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="form-field-4" placeholder="请输入姓的全拼+名的首字母" name="code" required class="col-xs-10 col-sm-5">
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 用户电话： </label>
+                                            <div class="col-sm-9">
+                                                <input type="number" id="form-field-5" placeholder="请输入用户电话" pattern="{11}" required name="phone" class="col-xs-10 col-sm-5" style="-webkit-appearance: none;">
+                                                <span class="help-inline col-xs-12 col-sm-7">
+                                                        <span class="middle" style="color: red" id="sp2"></span>
+                                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="col-md-offset-3 col-md-9">
+
+                                            <button class="btn btn-info" type="submit">
+
+                                                <i class="icon-ok bigger-110"></i>
+
+                                                提交
+
+                                            </button>
+
+                                            <buttonss class="btn btn-default" data-dismiss="modal">关闭</buttonss>
+                                        </div>
+
+
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <button class="icon-edit"
+                            style="background-color: #e876cd;color: #FFF;border-style: none ;padding: 5px 10px;float: left;cursor: pointer"
+                            data-toggle="modal" data-target="#myModal" id="add">
+                        新增用户
+                    </button>
+                    <button class="icon-cloud-download" id="checkUser"
+                            style="background-color: #17a3ff;color: #FFF;border-style: none ;padding: 5px 10px;float: left;margin-left: 1%;cursor: pointer;float: right;"
+                    >
+                        导出数据
+                    </button>
+                </td>
+            </tbody>
+
+        </table>
+        <div  style="padding-top:10px ;background-color: #f0f3f8;width: 100%;height: 50px">
+            <div class="col-sm-4">
+                <div class="dataTables_info" id="sample-table-2_info">
+                    当前
+                    {if condition="$pageCount eq 0 "}
+                    0
+                    {else/}
+                    {$page}
+                    {/if}
+                    /
+                    {if condition="$pageCount eq '' "}
+                    0
+                    {else/}
+                    <span id="pageCount">{$pageCount}</span>
+                    {/if}
+                    页，共
+                    {if condition="$count eq '' "}
+                    0
+                    {else/}
+                    {$count}
+                    {/if}
+                    条
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="dataTables_paginate paging_bootstrap">
+                    <ul class="pagination" id="userPageU1" >
+                        {if condition="$pageCount gt 1 "}
+                        {if condition="$page gt 1 "}
+                        <li><a href="#" style="color: black">上一页</a></li>
+                        {if condition="$pageCount gt 5 "}
+                        <li><a href="#" style="color: black">首页</a></li>
+                        {/if}
+                        {/if}
+                        {assign name="a" value="0" /}
+                        {assign name="b" value="0" /}
+                        {assign name="c" value="0" /}
+                        {for start="1" end="$pageCount+1" name='i'}
+                        {if condition="$i eq $page "}
+                        <li><a href="#" style="background-color: rgb(111, 179, 224);color: #FFF">{$i}</a></li>
+                        {else/}
+                        {if condition="$pageCount gt  5"}
+                        {if condition="$page elt 3 "}
+                        {if condition="$i gt 5"}
+                        <li><a href="#" style="color: black">...</a></li>
+                        {php}break;{/php}
+                        {else}
+                        <li><a href="#" style="color: black">{$i}</a></li>
+                        {/if}
+                        {elseif condition="($page gt 3) AND ($page lt ($pageCount-2))"/}
+                        {if condition="($i egt ($page-2)) AND ($i elt ($page+2))"}
+                        <li><a href="#" style="color: black">{$i}</a></li>
+                        {elseif condition="$i lt $page-2"/}
+                        {if condition="$a eq 0"}
+                        <li><a href="#" style="color: black">...</a></li>
+                        <i style="display: none">{$a++}</i>
+                        {/if}
+                        {elseif condition="$i gt $page+2"/}
+                        {if condition="$b eq 0"}
+                        <li><a href="#" style="color: black">...</a></li>
+                        <i style="display: none">{$b++}</i>
+                        {/if}
+                        {/if}
+                        {elseif condition="$page egt ($pageCount-2)"/}
+                        {if condition="($i egt $pageCount-4)"}
+                        <li><a href="#" style="color: black">{$i}</a></li>
+                        {else/}
+                        {if condition="$c eq 0"}
+                        <li><a href="#" style="color: black">...</a></li>
+                        <i style="display: none">{$c++}</i>
+                        {/if}
+                        {/if}
+                        {/if}
+                        {else/}
+                        <li><a href="#" style="color: black">{$i}</a></li>
+                        {/if}
+                        {/if}
+
+                        {/for}
+                        {if condition="$page lt $pageCount "}
+                        {if condition="$pageCount gt 5 "}
+                        <li><a href="#" style="color: black">尾页</a></li>
+                        {/if}
+                        <li><a href="#" style="color: black">下一页</a></li>
+                        {/if}
+                        {/if}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{/block}

@@ -1,0 +1,25 @@
+.showNull { /* 数据为空时显示 */
+    text-align: center;
+    line-height: 50px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+a, button { /* 去除点击后的框选样式 */
+	outline: none!important;
+}
+
+#doPost { /* 提交按钮样式 */
+    border-radius: 22px;
+    width: 80%;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.ball-grid-pulse > div {
+	background: orange;
+}
+
+#breadcrumbs { /* 隐藏导航条 */
+    display: none;
+}

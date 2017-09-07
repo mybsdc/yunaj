@@ -1,0 +1,347 @@
+/* 图片查看弹出框 */
+
+.tcck {
+    width: 100%;
+    /*margin-left:15%;
+margin-top:50px;*/
+    text-align: center;
+}
+
+.gbck {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    /* border-radius: 50%; */
+    border-bottom-left-radius: 100%;
+    line-height: 40px;
+    text-align: center;
+    width: 40px;
+    background: rgb(105, 105, 108);
+    color: #FFF;
+    cursor: pointer;
+    font-size: 12px;
+    z-index: 1003;
+}
+
+.gbck>span {
+    position: relative;
+    top: -4px;
+    right: -5px;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 6px;
+}
+
+.photoalbum {
+    background: rgba(87, 86, 86, 0.2);
+    height: 520px;
+    /*height: 440px;*/
+    width: 98%;
+    margin: 0 auto;
+    /*margin-top: 10px;*/
+    padding: 30px 0 0 0;
+    margin-bottom: 6px;
+}
+
+.photoview {
+    /*position:absolute;*/
+    left: 0;
+    right: 0;
+}
+
+ul li {
+    list-style-type: none;
+}
+
+.viewer-toolbar {
+    width: 203px;
+    margin: 0 auto 5px;
+    padding: 3px 0;
+}
+
+.viewer-toolbar>li {
+    float: left;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    border-radius: 50%;
+    overflow: hidden;
+    /*background-color: #000;*/
+    background-color: rgba(193, 14, 76, 0.65);
+}
+
+.viewer-toolbar>li+li {
+    margin-left: 1px;
+}
+
+.viewer-toolbar>li:before {
+    margin: 4px;
+}
+
+.viewer-next:before,
+.viewer-one-to-one:before,
+.viewer-prev:before,
+.viewer-reset:before,
+.viewer-rotate-left:before,
+.viewer-rotate-right:before,
+.viewer-zoom-in:before,
+.viewer-zoom-out:before {
+    font-size: 0;
+    line-height: 0;
+    display: block;
+    width: 20px;
+    height: 20px;
+    color: transparent;
+    background-image: url(../assets/images/gjl.png); /* 注意相对路径 */
+    background-repeat: no-repeat;
+}
+
+.viewer-zoom-in:before {
+    content: 'Zoom In';
+    background-position: 0 0;
+}
+
+.viewer-zoom-out:before {
+    content: 'Zoom Out';
+    background-position: -20px 0;
+}
+
+.viewer-one-to-one:before {
+    content: 'One to One';
+    background-position: -40px 0;
+}
+
+.viewer-reset:before {
+    content: 'Reset';
+    background-position: -60px 0;
+}
+
+.viewer-prev:before {
+    content: 'Previous';
+    background-position: -80px 0;
+}
+
+.viewer-next:before {
+    content: 'Next';
+    background-position: -120px 0;
+}
+
+.viewer-rotate-left:before {
+    content: 'Rotate Left';
+    background-position: -140px 0;
+}
+
+.viewer-rotate-right:before {
+    content: 'Rotate Right';
+    background-position: -160px 0;
+}
+
+.viewer-img {
+    /*width: 700px;*/
+    width: 100%;
+    height: auto;
+    min-width: 100px;
+    -webkit-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
+    transform: rotate(0deg) scale(1, 1);
+}
+
+.photoshow {
+    text-align: center;
+}
+
+.viewer-footer {
+    position: fixed;
+    right: 0;
+    left: 0;
+    text-align: center;
+    z-index: 1000;
+}
+
+.viewer-list {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    /*height: 50px;*/
+    margin: 0;
+    padding: 1px 0;
+}
+
+.viewer-navbar {
+    position: fixed;
+    right: 3%;
+    text-align: center;
+    /*z-index: 1001;*/
+    z-index: 2;
+}
+
+.viewer-list>li {
+    opacity: 0.4;
+    width: 50px;
+    height: 40px;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.viewer-list>.viewer-active {
+    opacity: 1;
+    border-top: 2px solid red;
+}
+
+.viewer-list>li>img {
+    width: 50px;
+    height: 40px;
+}
+
+.hide_fdj {
+    position: absolute;
+    left: 2%;
+    line-height: 25px;
+    width: 65px;
+    background: rgb(105, 105, 108);
+    border-radius: 5px;
+    color: #FFF;
+    text-align: center;
+    font-size: 10px;
+    cursor: pointer;
+    z-index: 1003;
+}
+
+.an_bottom {
+    bottom: 13%;
+}
+
+.large {
+    width: 320px;
+    height: 180px;
+    position: absolute;
+    /*border-radius: 50%;*/
+    /* 使用多重阴影、实现玻璃效果 */
+    box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.8), 0 0 7px 7px rgba(0, 0, 0, 0.3), inset 0 0 40px 2px rgba(0, 0, 0, 0.3);
+    /* 加载放大镜的图片 */
+    background: url() no-repeat;
+    display: none;
+    transform: rotate(0deg) scale(1, 1);
+    z-index: 999;
+}
+
+.verify {
+    margin-top: 25px;
+}
+
+.verify>ul>li {
+    float: left;
+    width: 50%;
+}
+
+.verify .sh {
+    width: 50%;
+    margin-left: 20%;
+    line-height: 36px;
+    border-radius: 5px;
+    text-align: center;
+    color: #FFF;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.verify .tg {
+    background: #4CAF50;
+    ;
+}
+
+.verify .btg {
+    background: red;
+}
+
+
+/* llf */
+
+.toVerify {
+    width: 100%;
+    height: 80px;
+    background-color: #fff;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}
+
+.toVerify .position-limit {
+    width: 80%;
+    height: 100%;
+    margin: 0 auto;
+    line-height: 80px;
+}
+
+.position-limit #notPass,
+.position-limit #pass {
+    width: 30%;
+    height: 40px;
+    border-radius: 6px;
+    color: #fff;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.position-limit div:hover {
+    opacity: 0.85;
+}
+
+#notPass {
+    background-color: #ef1629;
+    float: left;
+}
+
+#pass {
+    background-color: #24ee74;
+    float: right;
+}
+
+
+/* end llf */
+
+/* 顶部基础信息 */
+#baseInfo {
+    /*background-color: red;*/
+    text-align: left;
+    margin: 0 auto;
+    width: 92%;
+    font-family: '微软雅黑';
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+#baseInfo tr {
+    line-height: 26px;
+}
+
+.roominfo label {
+    /*float: left;*/
+    display: inline-block;
+    line-height: 70px;
+    font-size: 12px!important;
+}
+
+.roominfo label select {
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    outline: 0;
+    padding: 3px 4px;
+    height: 30px;
+    color: #858585;
+}
+
+#imgBox {
+    width: 100%;
+    height: auto;
+    text-align: center;
+    margin: 0 auto;
+}
+/* end 顶部基础信息 */

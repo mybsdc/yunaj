@@ -1,0 +1,26 @@
+<table id="sample-table-t2" class="table table-striped table-bordered table-hover" >
+
+
+    <tbody>
+    {if condition="count($re) eq 0 "}
+    <tr>
+        <td colspan="4">暂时没有用户数据...</td>
+    </tr>
+    {else/}
+    {foreach name="re" item="value" key="k"}
+    <tr r_id="{$value.id}" >
+        <td class="center" style="width: 10%">
+            <label>
+                <input type="checkbox" style="width: 16px;height: 16px">
+                <span class="lbl"></span>
+            </label>
+        </td>
+        <td style="width: 30%">{$value.name}</td>
+        <td style="width: 30%">{$value.code}</td>
+        <td style="width: 30%">{$value.mobile}</td>
+    </tr>
+    {/foreach}
+    {/if}
+    </tbody>
+
+</table>

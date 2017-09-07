@@ -1,0 +1,64 @@
+{extend name="common/base" /}
+{block  name="oNav"}
+<li class="active">
+    <a href="#">
+        <i class="icon-dashboard"></i>
+        <span class="menu-text"> 首页 </span>
+    </a>
+</li>
+    {foreach name="res" item="vo" }
+        {switch name="vo.id"}
+            {case value="1"}
+                <li f_id="{$vo.id}">
+                    <a href="#">
+                        <i class="icon-edit"></i>
+                        <span class="menu-text"> {$vo.name} </span>
+                    </a>
+
+                </li>
+            {/case}
+            {case value="2"}
+                <li f_id="{$vo.id}">
+                    <a href="#" >
+                        <i class=" icon-check"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {case value="3"}
+                <li f_id="{$vo.id}">
+                    <a href="#">
+                        <i class=" icon-credit-card"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {case value="4"}
+            <li f_id="{$vo.id}">
+                <a href="#">
+                    <i class="icon-cogs"></i>
+                    <span class="menu-text">  {$vo.name} </span>
+                </a>
+            </li>
+            {/case}
+            {case value="5"}
+                <li f_id="{$vo.id}">
+                    <a href="#" >
+                        <i class="icon-desktop"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {case value="6"}
+                <li f_id="{$vo.id}">
+                    <a href="{:url('home/Task/show')}" >
+                        <i class="icon-book"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {default /}default
+        {/switch}
+    {/foreach}
+
+{/block}

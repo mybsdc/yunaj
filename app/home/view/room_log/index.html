@@ -1,0 +1,618 @@
+{extend name="common/base" /}
+{block  name="oNav"}
+<li class="">
+    <a href="#">
+        <i class="icon-dashboard"></i>
+        <span class="menu-text"> 首页 </span>
+    </a>
+</li>
+    {foreach name="res" item="vo" }
+        {switch name="vo.id"}
+            {case value="1"}
+                <li f_id="{$vo.id}">
+                    <a href="javascript:;">
+                        <i class="icon-edit"></i>
+                        <span class="menu-text"> {$vo.name} </span>
+                    </a>
+
+                </li>
+            {/case}
+            {case value="2"}
+                {php}if (!isset($_GET['from'])):{/php}
+                    <li f_id="{$vo.id}" class="active">
+                {php}else:{/php}
+                    <li f_id="{$vo.id}">
+                {php}endif;{/php}    
+                    <a href="javascript:;">
+                        <i class=" icon-check"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {case value="3"}
+                {php}if (isset($_GET['from']) && $_GET['from'] === 'allData'):{/php}
+                    <li f_id="{$vo.id}" class="active">
+                {php}else:{/php}
+                    <li f_id="{$vo.id}">
+                {php}endif;{/php}
+                    <a href="javascript:;">
+                        <i class=" icon-credit-card"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {case value="4"}
+            <li f_id="{$vo.id}">
+                <a href="#">
+                    <i class="icon-cogs"></i>
+                    <span class="menu-text">  {$vo.name} </span>
+                </a>
+            </li>
+            {/case}
+            {case value="5"}
+                <li f_id="{$vo.id}">
+                    <a href="#" >
+                        <i class="icon-desktop"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {case value="6"}
+                <li f_id="{$vo.id}">
+                    <a href="{:url('home/Task/show')}" >
+                        <i class="icon-book"></i>
+                        <span class="menu-text">  {$vo.name} </span>
+                    </a>
+                </li>
+            {/case}
+            {default /}default
+        {/switch}
+    {/foreach}
+{/block}
+{block name="txbody"}
+<!-- layer -->
+
+<link rel="stylesheet" type="text/css" href="__PC__/layui/css/layui.css" />
+<script type="text/javascript" src="__PC__/layui/lay/dest/layui.all.js"></script>
+<!-- <script type="text/javascript" src="__PC__/layui/layui.js"></script> -->
+<!-- <script type="text/javascript">
+    layui.config({
+        base: '__PC__/layui/lay/modules/' // 模块目录
+    }).use('laypage'); // 加载入口
+</script> -->
+<style type="text/css">
+/*#layui-laypage-0 {
+	float: right;
+	width: auto;
+}*/
+.row {
+	margin: 0;
+}
+.layui-laypage-curr, .layui-laypage-em {
+	background-color: #6faed9!important;
+}
+
+#bottom-nav-llf {
+    display: none!important;
+}
+</style>
+<!-- end layer -->
+<!-- 引入图标库 -->
+<link rel="stylesheet" type="text/css" href="__MOBILE__/css/ionicons.min.css" />
+<!-- end 引入图标库 -->
+<!-- <script type="text/javascript" src="__MOBILE__/js/jquery-1.8.3.min.js"></script> -->
+<!-- 弹出框 -->
+<script src="__MOBILE__/sweetalert/sweetalert.min.js"></script>
+<link rel="stylesheet" type="text/css" href="__MOBILE__/sweetalert/sweetalert.css">
+<!-- end 弹出框 -->
+<!-- 图片查看弹出框 -->
+<link rel="stylesheet" type="text/css" href="__PC__/css/wait.css" />
+<!-- end 图片查看弹出框 -->
+<table style="width: 100%; line-height: 300%;">
+    <tr>
+        <td colspan="2">详细地址：{$baseInfo[0]['cityName'] . $baseInfo[0]['areaName'] . $baseInfo[0]['xqName'] . $baseInfo[0]['dong'] . $baseInfo[0]['unit'] . '单元' . $baseInfo[0]['room']}</td>
+        <td>姓名：{$baseInfo[0]['cstname']}</td>
+        <td>电话：{$baseInfo[0]['telphone']}</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td style="width: 20%;">用户编号：{$baseInfo[0]['cstcode']}</td>
+        <td style="width: 20%;">表底数：{$baseInfo[0]['basenumber']}</td>
+        <td style="width: 20%;">气表类型：{$baseInfo[0]['typeName']}</td>
+        <td style="width: 20%;">品牌：{$baseInfo[0]['brandName']}</td>
+        <td style="width: 20%;">进气方向：{$baseInfo[0]['direction']}</td>
+    </tr>
+</table>
+<div class="table-header" id="userHe">
+    <span>检查记录列表</span>
+</div>
+<div class="table-responsive" style="margin-top: -2px;">
+    <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+        <thead style="text-align: left;">
+            <tr>
+                <th style="text-align: right;">序号</th>
+                <th style="text-align: right;">照片</th>
+                <th style="text-align: left;">检查人</th>
+                <th style="text-align: right;">检查时间</th>
+                <th style="text-align: left;">审核人</th>
+                <th style="text-align: right;">审核时间</th>
+                <th style="text-align: left;">审核状态</th>
+                <th style="text-align: left;">安全隐患内容</th>
+            </tr>
+        </thead>
+        <tbody style="text-align: left;" id="listData">
+            <!-- <tr style="width: 100%;">
+                <td style="margin: 0 auto; width: 20%; height: 30px; text-align: center; line-height: 30px;">正在加载</td>
+            </tr> -->
+            <tr style="width: 100%;">
+                <td colspan="8" style="margin: 0 auto; width: 20%; height: 30px; text-align: center; line-height: 30px;">正在加载···</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="row" style="background-color: #f0f3f8; line-height: 70px; height: 70px;">
+        <div class="col-sm-4">
+            <div class="dataTables_info" id="sample-table-2_info">
+                第&nbsp;<span id="isCurrPage">1</span>&nbsp;/&nbsp;<span id="pageNum">{$toPage['pageNum']}</span>&nbsp;页，共&nbsp;<span id="isCount">{$toPage['count']}</span>&nbsp;条
+            </div>
+        </div>
+        <script type="text/javascript">
+        function showNull(count){ // 若没有数据
+            if (count == 0) {
+                $('#listData').html('<tr><td colspan="8" class="showNull">暂时没有数据哦</td></tr>');
+                $('#isCurrPage').html(0);
+                $('#pageNum').html(0);
+                $('#layer-pages').html(''); // 没有数据要分页条何用？
+            }
+        }
+        </script>
+        <div class="col-sm-8">
+            <div class="dataTables_paginate paging_bootstrap">
+                <div id="layer-pages"></div>
+            </div>
+        </div>
+    </div>
+    <!-- <script type="text/javascript" src="__MOBILE__/js/jquery-1.8.3.min.js"></script> -->
+    <script type="text/javascript">
+        layui.laypage({
+            cont: 'layer-pages',
+            groups: 5, // 显示页码数
+            skin: '#0f90e7',
+            pages: {$toPage['pageNum']}, // 总页数
+            first: '首页',
+            last: '尾页',
+            jump: function(obj, first){
+
+                // 得到了当前页，用于向服务端请求对应数据
+                var curr = obj.curr;
+                $.get("{:url('home/room_log/index')}", {page: curr, cstcode: {$_GET['cstcode']}}, function(data){
+                    
+                    let dataObj = eval(data); // json转对象
+                    if (dataObj.length == 0) { // 数据对象为空
+                        $('#isCurrPage').html(0);
+                        $('#pageNum').html(0);
+                        showNull(0);
+                        return false;
+                    } else {
+                        $('#isCurrPage').html(curr);
+                    }
+                    var html = '';
+                    $(dataObj).each(function(i){
+                        if (this.imgNum === null) {
+                            this.imgNum = '';
+                        }
+                        if (this.audituser === null) {
+                            this.audituser = '';
+                        }
+                        if (this.audittime === null) {
+                            this.audittime = '';
+                        }
+                        if (this.proInfo === null) {
+                            this.proInfo = '';
+                        }
+                        var str = this.check_id + ", '{$baseInfo[0]['cityName'] . $baseInfo[0]['areaName'] . $baseInfo[0]['xqName'] . $baseInfo[0]['dong'] . $baseInfo[0]['unit'] . '单元' . $baseInfo[0]['room']}', '" + this.checkuser + "', '" + this.checktime + "', '{$baseInfo[0]['cstname']}', {$baseInfo[0]['telphone']}, {$baseInfo[0]['cstcode']}, {$baseInfo[0]['basenumber']}, {$baseInfo[0]['type']}, {$baseInfo[0]['brand']}, '{$baseInfo[0]['direction']}'"; // 拼接参数，拖出来拼是为了防止特么单双引号冲突
+                        html += '<tr>';
+                        html += '<td style="text-align: right;">' + (i + 1 + (curr - 1) * {:config('row')}) + '</td>';
+                        html += '<td style="text-align: right;"><a href="javascript:;" onclick="getImg(' + str + ')" style="color: #17A3FF; text-decoration: underline;">' + this.imgNum + '张</a></td>';
+                        html += '<td>' + this.checkuser + '</td>';
+                        html += '<td style="text-align: right;">' + this.checktime + '</td>';
+                        html += '<td>' + this.audituser + '</td>';
+                        html += '<td style="text-align: right;">' + this.audittime + '</td>';
+                        html += '<td>' + this.status + '</td>';
+                        html += '<td><a href="{:url('home/do_check/editlog')}?check_id=' + this.check_id + '&from=allData" style="color: #17A3FF; text-decoration: underline;">' + this.proInfo + '</a></td>';
+                        html += '</tr>';
+                    });
+                    $('#listData').html(html);
+               }, 'json');
+            }
+        });
+    </script>
+</div>
+
+<!-- 模态框 -->
+<script type="text/javascript">
+function toDoImg(check_id, is_change, room_id){
+    var img_index = 0;
+    var current = 0; //角度
+    var fdbs = 1; //放大倍数
+    var old_img = [];
+    var sj_img;
+    var new_img = [];
+    var min_width = 200;
+    var window_width = 1080; //浏览器当前窗口的宽度
+    var window_height = 720; //浏览器当前窗口的高度 
+    var is_fdj = true;
+    var arr = [1, -3, 5, -7, 9, -11, 13, -15, 17, -19, 21, -23];
+    $(function() {
+        $(".viewer-img").load(function() {
+            old_img["is_width"] = true;
+            window_width = $(window).width();
+            window_height = $(window).height();
+            sj_img = new Image();
+            sj_img.src = $(this).attr("src");
+            if (sj_img.width < sj_img.height) {
+                $('.viewer-img').css("width", "auto");
+                $('.viewer-img').css("height", window_height * 0.6);
+                old_img["is_width"] = false;
+            } else {
+                $('.viewer-img').css("width", "500px");
+                $('.viewer-img').css("height", "auto");
+            }
+            old_img["width"] = $('.viewer-img').css("width").replace('px', '');
+            old_img["height"] = $('.viewer-img').css("height").replace('px', '');
+            new_img["width"] = old_img["width"];
+            new_img["height"] = old_img["height"];
+            img_index = parseInt($('.viewer-img').attr("id").replace('img_', ''));
+        });
+        //重新初始化
+        $(".viewer-reset").click(function() {
+            current = 0;
+            fdbs = 1;
+            old_img["is_width"] = true;
+            if (sj_img.width < sj_img.height) {
+                $(".viewer-img").css('transform', 'rotate(' + current + 'deg)');
+                $(".viewer-img").css("height", old_img["height"]);
+                $(".viewer-img").css("width", "auto");
+            } else {
+                $(".viewer-img").css('transform', 'rotate(' + current + 'deg)');
+                $(".viewer-img").css("width", old_img["width"]);
+                $(".viewer-img").css("height", "auto");
+            }
+            new_img["width"] = old_img["width"];
+            new_img["height"] = old_img["height"];
+            $(".large").css('transform', 'rotate(' + current + 'deg)');
+        });
+        //逆时针
+        $(".viewer-rotate-left").click(function() {
+            current = current - 90;
+            $(".viewer-img").css('transform', 'rotate(' + current + 'deg)');
+            //放大镜同步
+            $(".large").css('transform', 'rotate(' + current + 'deg)');
+        });
+        //顺时针
+        $(".viewer-rotate-right").click(function() {
+            current = current + 90;
+            $(".viewer-img").css('transform', 'rotate(' + current + 'deg)');
+            //放大镜同步
+            $(".large").css('transform', 'rotate(' + current + 'deg)');
+        });
+        //放大
+        $(".viewer-zoom-in").click(function() {
+            fdbs = 1 + 0.2;
+            if (old_img["is_width"]) {
+                new_img["width"] = new_img["width"] * fdbs;
+                if (new_img["width"] > sj_img["width"]) {
+                    new_img["width"] = sj_img["width"];
+                }
+                $(".viewer-img").css("width", new_img["width"]);
+                $(".viewer-img").css("height", "auto");
+            } else {
+                new_img["height"] = new_img["height"] * fdbs;
+                if (new_img["height"] > sj_img["height"]) {
+                    new_img["height"] = sj_img["height"];
+                }
+                $(".viewer-img").css("height", new_img["height"]);
+                $(".viewer-img").css("width", "auto");
+            }
+        });
+        //缩小
+        $(".viewer-zoom-out").click(function() {
+            fdbs = 1 - 0.2;
+            if (old_img["is_width"]) {
+                new_img["width"] = new_img["width"] * fdbs;
+                if (new_img["width"] < min_width) {
+                    new_img["width"] = min_width;
+                }
+                $(".viewer-img").css("width", new_img["width"]);
+                $(".viewer-img").css("height", "auto");
+            } else {
+                new_img["height"] = new_img["height"] * fdbs;
+                if (new_img["height"] < min_width) {
+                    new_img["height"] = min_width;
+                }
+                $(".viewer-img").css("height", new_img["height"]);
+                $(".viewer-img").css("width", "auto");
+            }
+        });
+        //实际大小
+        $(".viewer-one-to-one").click(function() {
+            new_img["width"] = sj_img.width;
+            new_img["height"] = sj_img.height;
+            $(".viewer-img").css("width", new_img["width"]);
+            $(".viewer-img").css("height", new_img["height"]);
+        });
+        //点击缩略图
+        $(".viewer-list li").click(function() {
+            var $lilist = $(".viewer-list").find("li");
+            for (var i = 0; i < $lilist.length; i++) {
+                $lilist.eq(i).removeClass("viewer-active");
+            }
+            $(this).addClass("viewer-active");
+            $('.viewer-img').attr("src", $(this).find("img").attr("src"));
+            $('.viewer-img').attr("id", "img_" + $(this).find("img").attr("id"));
+            $(".viewer-reset").click();
+            $('.large').css("background-image", "url(" + $(this).find("img").attr("src") + ")");
+        });
+        //下一张
+        $(".viewer-next").click(function() {
+            var $lilist = $(".viewer-list").find("li");
+            var $maxcount = $lilist.length;
+            if (img_index + 1 >= $maxcount) {
+                return false;
+            }
+            img_index = img_index + 1;
+            $('.viewer-img').attr("src", $("#" + img_index).attr("src"));
+            // console.log($("#" + img_index).attr("src"));
+            // alert()
+            $('.viewer-img').attr("id", "img_" + img_index);
+            for (var i = 0; i < $lilist.length; i++) {
+                $lilist.eq(i).removeClass("viewer-active");
+            }
+            $lilist.eq(img_index).addClass("viewer-active");
+            $(".viewer-reset").click();
+            $('.large').css("background-image", "url(" + $("#" + img_index).attr("src") + ")");
+        });
+        //上一张
+        $(".viewer-prev").click(function() {
+            if (img_index - 1 < 0) {
+                return false;
+            }
+            img_index = img_index - 1;
+            if (img_index < 0) {
+                img_index = 0;
+            }
+            $('.viewer-img').attr("src", $("#" + img_index).attr("src"));
+            $('.viewer-img').attr("id", "img_" + img_index);
+
+            var $lilist = $(".viewer-list").find("li");
+            var $maxcount = $lilist.length;
+            for (var i = 0; i < $lilist.length; i++) {
+                $lilist.eq(i).removeClass("viewer-active");
+            }
+            $lilist.eq(img_index).addClass("viewer-active");
+            $(".viewer-reset").click();
+            $('.large').css("background-image", "url(" + $("#" + img_index).attr("src") + ")");
+        });
+
+        $('.photoview').mousemove(function(e) {
+
+            if (!is_fdj) {
+                return false;
+            }
+            // 获得鼠标X轴和Y轴的坐标
+            // 先获得img相对与document的定位position
+            var $one_img = $(this).find("img").eq(0);
+            var photoview_offset = $one_img.offset();
+            // 这里我们用鼠标相对与文档的位置减去鼠标相对于img这个容器的位置 来得到鼠标的位置
+            //加上旋转判断
+            if (current % 360 == 0) {
+                var mouse_x = e.pageX - photoview_offset.left;
+                var mouse_y = e.pageY - photoview_offset.top;
+            } else if (current % 180 == 0) {
+                //旋转180度
+                var mouse_x = Math.round($one_img.width() - (e.pageX - photoview_offset.left));
+                var mouse_y = Math.round($one_img.height() - (e.pageY - photoview_offset.top));
+            } else {
+                if (arr.indexOf(current / 90) >= 0) {
+                    //顺时针旋转90度
+                    var mouse_y = Math.round($one_img.height() - (e.pageX - photoview_offset.left));
+                    var mouse_x = e.pageY - photoview_offset.top;
+                } else {
+                    //逆时针旋转90度
+                    var mouse_y = e.pageX - photoview_offset.left;
+                    var mouse_x = Math.round($one_img.width() - (e.pageY - photoview_offset.top));
+                }
+            }
+            //显示坐标数据,测试
+            //$("#xszb").text(mouse_x+"||"+mouse_y).show();
+
+            // 调整放大镜的隐藏与显示
+            if (mouse_x > 0 && mouse_y > 0 && mouse_x < $one_img.width() && mouse_y < $one_img.height()) {
+                $('.large').show();
+            } else {
+                $('.large').hide();
+            }
+            if ($('.large').is(':visible')) {
+                // 放大镜图片背景的定位是根据鼠标在小图片上改变的位置来改变的:
+                // 因此应该先得到放大的比例、再定位这个放大镜里背景图片的位置、           
+                var rx = Math.round(sj_img.width / $one_img.width() * mouse_x - $('.large').width() / 2) * -1;
+                var ry = Math.round(sj_img.height / $one_img.height() * mouse_y - $('.large').height() / 2) * -1;
+                var bgp = rx + 'px ' + ry + 'px';
+                // 放大镜跟随鼠标的效果:
+                // 移动的位置=鼠标相对于文档的位置 - 放大镜宽和高的一半
+                var gx = e.pageX - $('.large').width() / 2;
+                var gy = e.pageY - $('.large').height() / 2;
+                $('.large').css({
+                    'left': gx,
+                    'top': gy,
+                    'backgroundPosition': bgp
+                })
+            }
+        });
+        //隐藏放大镜
+        $('.viewer-toolbar li').mouseover(function(e) {
+            $('.large').hide();
+        });
+        $('.viewer-list li').mouseover(function(e) {
+            $('.large').hide();
+        });
+        $(".hide_fdj").click(function(e) {
+            if (is_fdj) {
+                is_fdj = false;
+                $(".hide_fdj").text("打开放大镜");
+            } else {
+                is_fdj = true;
+                $(".hide_fdj").text("关闭放大镜");
+            }
+        });
+    });
+};
+</script>
+<script type="text/javascript">
+    function getImg(check_id, address, checker, check_time, name, tel, code, base_number, type, brand, path, is_change, room_id){
+        $.get("{:url('home/all_data/photoView')}", {check_id: check_id}, function(data){
+            var html = '';
+            var dataObj = JSON.parse(data);
+            if (dataObj.length === 0) { // 无图片的情况
+                swal({ 
+                    title: '该条记录没有照片哦', 
+                    text: '检查人还没有上传照片', 
+                    type: 'info', 
+                    showCancelButton: false, 
+                    closeOnConfirm: false, 
+                    showLoaderOnConfirm: true,
+                    confirmButtonText: '知道了', 
+                });
+                return false;
+            } else {
+                $('#isImgBox').modal();
+            }
+            $(dataObj).each(function(i){ // photo url
+                if (i === 0) {
+                    html += '<li class="viewer-active"><img src="' + this.url + '" data-action="view" id="' + i + '" data-original-url="' + this.url + '" alt="图片1" data-filled="true"></li>';
+                } else {
+                    html += '<li><img src="' + this.url + '" data-action="view" id="' + i + '" data-original-url="' + this.url + '" alt="图片1" data-filled="true"></li>';
+                }
+            });
+            html += '<div style="opacity: 0.4;">︽</div>';
+            $('.viewer-list').html(html);
+
+            // big images
+            var html2 = '';
+            html2 += '<div class="large" style="background: url(' + dataObj[0].url + ') no-repeat;"></div><img src="' + dataObj[0].url + '" class="viewer-img" id="img_0" data-original-url="' + dataObj[0].url + '" alt="照片">';
+            $('.photoview').html(html2);
+            
+            // base info
+            $('#xxdz').html(address);
+            $('#jcr').html(checker);
+            $('#jcsj').html(check_time);
+            $('#xm').html(name);
+            $('#dh').html(tel);
+            $('#yhbh').html(code);
+            $('#bds').html(base_number);
+
+            // type
+            $('#isType option').each(function(i){
+                if (this.value == type) {
+                    $(this).attr('selected', 'selected');
+                }
+            });
+
+            // brand
+            $('#isBrand option').each(function(i){
+                if (this.value == brand) {
+                    $(this).attr('selected', 'selected');
+                }
+            });
+
+            // path
+            $('#path option').each(function(i){
+                 if ($(this).val() == path) {
+                    $(this).attr('selected', 'selected');
+                 }
+            });
+            toDoImg(check_id, is_change, room_id); // 审核功能以及操作图片功能，check_id在当前函数中已经被定义，可直接用
+        });
+    }
+</script>
+<div id="isImgBox" class="modal fade in" tabindex="-1" aria-hidden="false" style="display: none;">
+    <div class="modal-dialog" style="width: 700px;">
+        <div class="modal-content">
+            <div class="tcck" id="imgBox">
+                <div class="gbck" data-dismiss="modal" aria-hidden="true"><span id="isIcon" class="ion-close-round"></span></div>
+                <div class="roominfo" id="baseBox" style="width: 100%; font-size: 14px; text-align: left;">
+                    <table id="baseInfo">
+                        <tr>
+                            <td colspan="2">详细地址：<span id="xxdz"></span></td>
+                            <td>检查人：<span id="jcr"></span></td>
+                            <td>检查时间：<span id="jcsj"></span></td>
+                        </tr>
+                        <tr class="userInfo">
+                            <td>姓名：<span id="xm"></span></td>
+                            <td>电话：<span id="dh"></span></td>
+                            <td>用户编号：<span id="yhbh"></span></td>
+                            <td>表底数：<span id="bds"></span></td>
+                        </tr>
+                    </table>
+                    <div style="width: 92%; margin: 0 auto; border-top: 2px solid #ccc; border-radius: 2px;">
+                        <label style="margin-right: 4%;">
+                            <span>气表类型：</span>
+                            <select style="border: 1px solid #307ecc; border-radius: 6px;" name="type" id="isType">
+                            {volist name="type" id="vo"}
+                                <option value="{$vo.id}">{$vo.name}</option>
+                            {/volist}
+                            </select>
+                        </label>
+                        <label style="margin-right: 4%;">
+                            <span>品牌：</span>
+                            <select style="border: 1px solid #307ecc; border-radius: 6px;" name="brand" id="isBrand">
+                            {volist name="brand" id="vo"}
+                                <option value="{$vo.id}">{$vo.name}</option>
+                            {/volist}
+                            </select>
+                        </label>
+                        <label>
+                            <span>进气方向：</span>
+                            <select style="border: 1px solid #307ecc; border-radius: 6px;" name="direction" id="path">
+                                <option value="上">上</option>
+                                <option value="下">下</option>
+                                <option value="左">左</option>
+                                <option value="右">右</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="photoalbum">
+                    <div class="photoview">
+                    </div>
+                    <div class="viewer-navbar an_bottom">
+                        <ul class="viewer-list">
+                            <!-- <li><img src="" data-action="view" id="" data-original-url="" alt="图片1" data-filled="true"></li>
+                            <div style="opacity: 0.4;">︽</div> -->
+                        </ul>
+                    </div>
+                    <div class="viewer-footer an_bottom">
+                        <ul class="viewer-toolbar">
+                            <li class="viewer-zoom-in" data-action="zoom-in">::before</li>
+                            <li class="viewer-zoom-out" data-action="zoom-out"></li>
+                            <li class="viewer-prev" data-action="prev"></li>
+                            <li class="viewer-reset" data-action="reset"></li>
+                            <li class="viewer-next" data-action="next"></li>
+                            <li class="viewer-rotate-left" data-action="rotate-left"></li>
+                            <li class="viewer-rotate-right" data-action="rotate-right"></li>
+                        </ul>
+                        <div id="xszb" style="display:none"></div>
+                    </div>
+                    <div class="hide_fdj an_bottom">关闭放大镜</div>
+                </div>
+                <!-- <div class="toVerify">
+                    <div class="position-limit">
+                        <div id="notPass">审核不通过</div>
+                        <div id="pass">审核通过</div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end 模态框 -->
+{/block}

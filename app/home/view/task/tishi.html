@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>提示</title>
+    <link rel="stylesheet" type="text/css" href="__MOBILE__/sweetalert/sweetalert.css">
+    <script src="__PC__/assets/js/jquery-2.0.3.min.js"></script>
+    <script src="__MOBILE__/sweetalert/sweetalert.min.js"></script>
+    <script>
+        $(function () {
+            swal({
+                title: "注意！",
+                text: "您所对应的公司还没有选择城市，请联系管理员设置后再进入任务页面！",
+                type: "info",
+                confirmButtonText: "确认"
+            }, function(){
+                window.history.back(-1);
+            });
+        });
+        </script>
+</head>
+<body style="background-color: rgba(42,205,211,0.11)">
+
+</body>
+</html>
